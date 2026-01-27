@@ -1,0 +1,424 @@
+// Prisma Schema for Jejakin - Platform Pariwisata Indonesia (Enhanced)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          String    @default("user") // user, partner, admin
+  avatar        String?
+  phone         String?
+  address       String?   @db.Text
+  city          String?
+  province      String?
+  postalCode    String?
+  dateOfBirth   DateTime?
+  gender        String?   // male, female, other
+  bio           String?   @db.Text
+  emailVerified Boolean   @default(false)
+  isVerified    Boolean   @default(false)
+  verifiedAt    DateTime?
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  destinations      Destination[]
+  bookings          Booking[]
+  reviews           Review[]
+  wishlists         Wishlist[]
+  notifications     Notification[]
+  activityLogs      ActivityLog[]
+  reviewResponses   ReviewResponse[]
+  partnerEarnings   PartnerEarning[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// ============================================
+// DESTINATION MANAGEMENT
+// ============================================
+
+model Category {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  slug        String        @unique
+  description String?       @db.Text
+  icon        String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  destinations Destination[]
+  
+  @@map("categories")
+}
+
+model Destination {
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  description   String    @db.Text
+  location      String
+  province      String
+  city          String
+  categoryId    String?
+  category      String    // Temporary: pantai, gunung, budaya, kuliner (will be replaced by categoryId)
+  price         Int       @default(0)
+  rating        Float     @default(0)
+  images        Json      // Array of image URLs (legacy)
+  facilities    Json      // Array of facilities (legacy)
+  latitude      Float?
+  longitude     Float?
+  duration      Int?      // in hours
+  minPeople     Int?
+  maxPeople     Int?
+  difficulty    String?   // easy, moderate, hard
+  bestTime      String?   // Best time to visit
+  openingHours  Json?     // {mon: "08:00-17:00", ...}
+  contactPhone  String?
+  contactEmail  String?
+  website       String?
+  videoUrl      String?
+  viewCount     Int       @default(0)
+  bookingCount  Int       @default(0)
+  status        String    @default("active") // active, inactive, pending
+  userId        String    // Partner yang mengelola
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  user                  User                    @relation(fields: [userId], references: [id])
+  categoryRelation      Category?               @relation(fields: [categoryId], references: [id])
+  bookings              Booking[]
+  reviews               Review[]
+  galleries             DestinationGallery[]
+  destinationFacilities DestinationFacility[]
+  wishlists             Wishlist[]
+  pricingTiers          DestinationPricing[]
+
+  @@index([slug])
+  @@index([userId])
+  @@index([categoryId])
+  @@index([category])
+  @@index([province])
+  @@index([status])
+  @@map("destinations")
+}
+
+model DestinationGallery {
+  id            String      @id @default(cuid())
+  destinationId String
+  imageUrl      String
+  caption       String?
+  isPrimary     Boolean     @default(false)
+  order         Int         @default(0)
+  createdAt     DateTime    @default(now())
+  
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  
+  @@index([destinationId])
+  @@map("destination_galleries")
+}
+
+model Facility {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  icon        String?
+  category    String    // amenities, activities, services
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  
+  destinations DestinationFacility[]
+  
+  @@map("facilities")
+}
+
+model DestinationFacility {
+  id            String      @id @default(cuid())
+  destinationId String
+  facilityId    String
+  
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  facility      Facility    @relation(fields: [facilityId], references: [id])
+  
+  @@unique([destinationId, facilityId])
+  @@map("destination_facilities")
+}
+
+model DestinationPricing {
+  id            String      @id @default(cuid())
+  destinationId String
+  name          String      // Weekday, Weekend, Holiday, Peak Season
+  price         Int
+  validFrom     DateTime?
+  validUntil    DateTime?
+  daysOfWeek    Json?       // [1,2,3,4,5] for weekdays
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  
+  @@index([destinationId])
+  @@map("destination_pricing")
+}
+
+// ============================================
+// BOOKING MANAGEMENT
+// ============================================
+
+model Booking {
+  id              String    @id @default(cuid())
+  bookingCode     String    @unique
+  userId          String
+  destinationId   String
+  visitDate       DateTime
+  numberOfPeople  Int
+  totalPrice      Int
+  status          String    @default("pending") // pending, confirmed, cancelled, completed
+  paymentStatus   String    @default("unpaid") // unpaid, paid, refunded
+  notes           String?   @db.Text
+  checkInTime     String?
+  specialRequests String?   @db.Text
+  cancelledAt     DateTime?
+  cancelReason    String?   @db.Text
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  user        User            @relation(fields: [userId], references: [id])
+  destination Destination     @relation(fields: [destinationId], references: [id])
+  payment     Payment?
+  voucher     BookingVoucher?
+  guests      BookingGuest[]
+  earning     PartnerEarning?
+
+  @@index([userId])
+  @@index([destinationId])
+  @@index([bookingCode])
+  @@index([status])
+  @@map("bookings")
+}
+
+model BookingGuest {
+  id          String   @id @default(cuid())
+  bookingId   String
+  name        String
+  age         Int?
+  idType      String?  // ktp, passport
+  idNumber    String?
+  phone       String?
+  email       String?
+  createdAt   DateTime @default(now())
+  
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@index([bookingId])
+  @@map("booking_guests")
+}
+
+model Payment {
+  id              String    @id @default(cuid())
+  bookingId       String    @unique
+  amount          Int
+  paymentMethod   String    // credit_card, bank_transfer, e-wallet, cash
+  paymentGateway  String?   // midtrans, xendit, manual
+  transactionId   String?   @unique
+  status          String    @default("pending") // pending, processing, success, failed, refunded
+  paidAt          DateTime?
+  refundedAt      DateTime?
+  metadata        Json?     // Store payment gateway response
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  booking         Booking   @relation(fields: [bookingId], references: [id])
+  
+  @@index([bookingId])
+  @@index([status])
+  @@map("payments")
+}
+
+// ============================================
+// REVIEW MANAGEMENT
+// ============================================
+
+model Review {
+  id            String    @id @default(cuid())
+  userId        String
+  destinationId String
+  rating        Int       // 1-5
+  comment       String    @db.Text
+  images        Json?     // Array of image URLs
+  isVerified    Boolean   @default(false)
+  helpfulCount  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user        User            @relation(fields: [userId], references: [id])
+  destination Destination     @relation(fields: [destinationId], references: [id])
+  response    ReviewResponse?
+
+  @@index([userId])
+  @@index([destinationId])
+  @@map("reviews")
+}
+
+model ReviewResponse {
+  id        String   @id @default(cuid())
+  reviewId  String   @unique
+  userId    String   // Partner or Admin who responded
+  response  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+  
+  @@map("review_responses")
+}
+
+// ============================================
+// WISHLIST & FAVORITES
+// ============================================
+
+model Wishlist {
+  id            String      @id @default(cuid())
+  userId        String
+  destinationId String
+  createdAt     DateTime    @default(now())
+  
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, destinationId])
+  @@index([userId])
+  @@map("wishlists")
+}
+
+// ============================================
+// VOUCHER & PROMO
+// ============================================
+
+model Voucher {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  name            String
+  description     String?   @db.Text
+  discountType    String    // percentage, fixed
+  discountValue   Int
+  minTransaction  Int       @default(0)
+  maxDiscount     Int?
+  usageLimit      Int?
+  usedCount       Int       @default(0)
+  validFrom       DateTime
+  validUntil      DateTime
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  bookings        BookingVoucher[]
+  
+  @@map("vouchers")
+}
+
+model BookingVoucher {
+  id            String   @id @default(cuid())
+  bookingId     String   @unique
+  voucherId     String
+  discountAmount Int
+  createdAt     DateTime @default(now())
+  
+  booking       Booking  @relation(fields: [bookingId], references: [id])
+  voucher       Voucher  @relation(fields: [voucherId], references: [id])
+  
+  @@map("booking_vouchers")
+}
+
+// ============================================
+// NOTIFICATION SYSTEM
+// ============================================
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String    // booking_confirmed, payment_success, review_reply, etc
+  title     String
+  message   String    @db.Text
+  link      String?
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+// ============================================
+// PARTNER EARNINGS
+// ============================================
+
+model PartnerEarning {
+  id              String    @id @default(cuid())
+  partnerId       String
+  bookingId       String    @unique
+  grossAmount     Int
+  platformFee     Int
+  netAmount       Int
+  status          String    @default("pending") // pending, paid, cancelled
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  partner         User      @relation(fields: [partnerId], references: [id])
+  booking         Booking   @relation(fields: [bookingId], references: [id])
+  
+  @@index([partnerId])
+  @@index([status])
+  @@map("partner_earnings")
+}
+
+// ============================================
+// ACTIVITY LOGS
+// ============================================
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String   // login, create_booking, update_destination, etc
+  entity      String?  // booking, destination, user
+  entityId    String?
+  description String   @db.Text
+  ipAddress   String?
+  userAgent   String?  @db.Text
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  
+  user        User?    @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("activity_logs")
+}

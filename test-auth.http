@@ -1,0 +1,23 @@
+### Test Register New User
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User Baru",
+  "email": "testuser@example.com",
+  "password": "password123",
+  "role": "user"
+}
+
+### Test Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### Test Get Current User (Replace TOKEN with actual token from login)
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer YOUR_TOKEN_HERE
