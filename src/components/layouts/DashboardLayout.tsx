@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { NotificationBell } from '@/components/ui/NotificationBell';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -30,12 +31,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
-    { name: 'Destinations', href: '/dashboard/destinations', icon: '🏝️' },
+    { name: 'Explore', href: '/dashboard/explore', icon: '🔍' },
+    { name: 'Wishlist', href: '/dashboard/wishlist', icon: '❤️' },
     { name: 'Bookings', href: '/dashboard/bookings', icon: '📅' },
-    { name: 'Reviews', href: '/dashboard/reviews', icon: '⭐' },
+    { name: 'Notifications', href: '/dashboard/notifications', icon: '🔔' },
+    ...(user?.role === 'partner' || user?.role === 'admin' ? [
+      { name: 'Destinations', href: '/dashboard/destinations', icon: '🏝️' },
+    ] : []),
     ...(user?.role === 'admin' ? [
-      { name: 'Users', href: '/dashboard/users', icon: '👥' },
-      { name: 'Analytics', href: '/dashboard/analytics', icon: '📈' },
+      { name: 'Admin Panel', href: '/dashboard/admin', icon: '⚙️' },
+      { name: 'Users', href: '/dashboard/admin/users', icon: '👥' },
+      { name: 'Reviews', href: '/dashboard/admin/reviews', icon: '⭐' },
     ] : []),
   ];
 
@@ -142,9 +148,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </svg>
             </button>
             <div className="flex-1" />
-            <Button variant="outline" size="sm" onClick={() => router.push('/')}>
-              View Site
-            </Button>
+            <div className="flex items-center gap-2">
+              <NotificationBell />
+              <Button variant="outline" size="sm" onClick={() => router.push('/')}>
+                View Site
+              </Button>
+            </div>
           </div>
         </header>
 

@@ -9,8 +9,56 @@ async function main() {
   // Clear existing data
   await prisma.review.deleteMany();
   await prisma.booking.deleteMany();
+  await prisma.wishlist.deleteMany();
+  await prisma.notification.deleteMany();
+  await prisma.destinationGallery.deleteMany();
+  await prisma.destinationFacility.deleteMany();
+  await prisma.facility.deleteMany();
   await prisma.destination.deleteMany();
+  await prisma.category.deleteMany();
   await prisma.user.deleteMany();
+
+  // Create Categories
+  const categories = await Promise.all([
+    prisma.category.create({
+      data: {
+        name: 'Pantai',
+        slug: 'pantai',
+        description: 'Destinasi wisata pantai dengan pemandangan laut yang indah',
+        icon: '🏖️',
+        isActive: true,
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: 'Gunung',
+        slug: 'gunung',
+        description: 'Destinasi wisata gunung untuk pendakian dan hiking',
+        icon: '⛰️',
+        isActive: true,
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: 'Budaya',
+        slug: 'budaya',
+        description: 'Destinasi wisata budaya dan sejarah',
+        icon: '🏛️',
+        isActive: true,
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: 'Kuliner',
+        slug: 'kuliner',
+        description: 'Destinasi wisata kuliner dan makanan khas',
+        icon: '🍜',
+        isActive: true,
+      },
+    }),
+  ]);
+
+  console.log('✅ Categories created');
 
   // Create Users
   const hashedPassword = await bcrypt.hash('password123', 10);
@@ -38,7 +86,7 @@ async function main() {
   const user1 = await prisma.user.create({
     data: {
       email: 'user@jejakin.com',
-      name: 'Budi Santoso',
+      name: 'User Demo',
       password: hashedPassword,
       role: 'user',
       emailVerified: true,
@@ -47,8 +95,8 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
-      email: 'siti@jejakin.com',
-      name: 'Siti Nurhaliza',
+      email: 'user2@jejakin.com',
+      name: 'User Demo 2',
       password: hashedPassword,
       role: 'user',
       emailVerified: true,

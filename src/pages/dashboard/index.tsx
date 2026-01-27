@@ -228,23 +228,49 @@ function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Link href="/dashboard/destinations">
                   <Button className="w-full">
-                    Kelola Destinasi
+                    🏝️ Kelola Destinasi
                   </Button>
                 </Link>
                 {user.role === 'admin' && (
                   <>
-                    <Link href="/dashboard/users">
+                    <Link href="/dashboard/admin">
                       <Button className="w-full">
-                        Kelola User
+                        ⚙️ Admin Dashboard
                       </Button>
                     </Link>
-                    <Link href="/dashboard/analytics">
+                    <Link href="/dashboard/admin/users">
                       <Button className="w-full">
-                        Analytics
+                        👥 Kelola User
                       </Button>
                     </Link>
                   </>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* User Quick Actions */}
+        {user?.role === 'user' && (
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Explore Destinasi</CardTitle>
+              <CardDescription>
+                Temukan destinasi wisata impian Anda
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Link href="/dashboard/explore">
+                  <Button className="w-full" size="lg">
+                    🔍 Explore Destinasi
+                  </Button>
+                </Link>
+                <Link href="/dashboard/wishlist">
+                  <Button className="w-full" variant="outline" size="lg">
+                    ❤️ Wishlist Saya
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

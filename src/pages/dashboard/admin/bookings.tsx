@@ -47,7 +47,7 @@ function AdminBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
@@ -85,11 +85,13 @@ function AdminBookingsPage() {
     }
   };
 
-  const filteredBookings = bookings.filter((booking) =>
-    booking.bookingCode.toLowerCase().includes(search.toLowerCase()) ||
-    booking.user.name.toLowerCase().includes(search.toLowerCase()) ||
-    booking.destination.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesSearch = booking.bookingCode.toLowerCase().includes(search.toLowerCase()) ||
+      booking.user.name.toLowerCase().includes(search.toLowerCase()) ||
+      booking.destination.name.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -201,7 +203,7 @@ function AdminBookingsPage() {
                     <SelectValue placeholder="All Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Status</SelectItem>
+                    <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
                     <SelectItem value="confirmed">Confirmed</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>

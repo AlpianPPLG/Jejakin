@@ -148,15 +148,25 @@
 - [ ] Add export functionality
 
 ### Day 6-7: Additional Features
-- [ ] Implement search functionality
-- [ ] Add filtering options
+- [x] Implement search functionality
+- [x] Add filtering options
+- [x] Create wishlist feature
+- [x] Implement notifications system
+- [x] Create ToastContext
+- [x] Add category management
+- [x] Create payment tracking
+- [x] Create gallery management
+- [x] Separate user and admin dashboards
+- [x] Create explore page for users
+- [x] Add notification bell component
+- [x] Create destination detail page
+- [x] Implement booking from detail page
+- [x] Add reviews display
+- [x] Create image gallery
 - [ ] Create settings page
 - [ ] Implement user preferences
-- [ ] Add notifications system
-- [ ] Create ToastContext (DONE)
-- [ ] Test all features
 
-### 📊 Phase 4 Progress: 90% Complete
+### 📊 Phase 4 Progress: 98% Complete
 
 ---
 
@@ -166,12 +176,12 @@
 Phase 1: Foundation & Setup        [████████████████████] 100% ✅
 Phase 2: UI Library & Auth         [████████████████████] 100% ✅
 Phase 3: Core Features Part 1      [████████████████████] 100% ✅
-Phase 4: Core Features Part 2      [██████████████████░░]  90%
+Phase 4: Core Features Part 2      [███████████████████▓]  98%
 Phase 5: Testing & Optimization    [░░░░░░░░░░░░░░░░░░░░]   0%
 Phase 6: Polish & Review           [░░░░░░░░░░░░░░░░░░░░]   0%
 Phase 7: Deployment & Launch       [░░░░░░░░░░░░░░░░░░░░]   0%
 
-Total Progress: 84%
+Total Progress: 88%
 ```
 
 ---
@@ -218,19 +228,41 @@ Total Progress: 84%
 - **NEW**: Admin/Partner dashboard with comprehensive statistics
 - **NEW**: Admin API endpoints for bookings, users, and stats
 - **NEW**: Admin bookings management page with filters
-- **NEW**: Database enhancement plan with 12 new tables
-- **NEW**: Enhanced Prisma schema (schema_enhanced.prisma)
-- **NEW**: Fixed booking API error handling
-- **NEW**: Fixed create destination page (removed infinite loop)
+- **NEW**: Database migrated to enhanced schema with all new tables
+- **NEW**: Separated user and admin dashboards with role-based features
+- **NEW**: Created explore page for users to browse destinations
+- **NEW**: Implemented wishlist functionality with heart button
+- **NEW**: Added notification system with bell icon and real-time updates
+- **NEW**: Created category management system (8 categories seeded)
+- **NEW**: Implemented payment tracking system
+- **NEW**: Added gallery management for destinations
+- **NEW**: API endpoints: wishlists, categories, notifications, payments, galleries
+- **NEW**: WishlistButton and NotificationBell UI components
+- **NEW**: Destination detail page with full information
+- **NEW**: Booking form integrated in detail page
+- **NEW**: Image gallery with thumbnail navigation
+- **NEW**: Reviews display on destination detail
+- **NEW**: Real-time price calculation for bookings
+- **NEW**: Complete notification system for booking alerts
+- **NEW**: Email notification templates (user & admin)
+- **NEW**: Automatic notifications on booking creation
+- **NEW**: Notification page with full list
+- **NEW**: Email helper library for future integration
+- **NEW**: Notifications menu in dashboard sidebar
 
 ---
 
 **Status**: 🟢 On Track
 
-## 🔧 Recent Fixes
+## 🔧 Recent Fixes & Enhancements
 
 1. ✅ Fixed "Gagal memuat booking" error - improved error handling in API
 2. ✅ Fixed blank create destination page - removed infinite redirect loop
 3. ✅ Added admin/partner role access to view all bookings
-4. ✅ Created comprehensive database enhancement plan
-5. ✅ Built admin dashboard with statistics and management tools
+4. ✅ Migrated database to enhanced schema (Phase 1 complete)
+5. ✅ Separated user dashboard from admin dashboard
+6. ✅ Created explore and wishlist pages for users
+7. ✅ Implemented notification system with real-time polling
+8. ✅ Added category-based filtering for destinations
+9. ✅ Fixed Radix UI Select empty value error - replaced "" with "all"
+10. ✅ Updated all filter logic to handle "all" value properly

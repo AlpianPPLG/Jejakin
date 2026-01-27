@@ -34,19 +34,19 @@ export default function Home() {
     {
       name: 'Pantai Kuta, Bali',
       category: 'Pantai',
-      image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800',
+      image: 'https://images.unsplash.com/photo-1657982217705-2a2ce5110c42?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGFudGFpJTIwa3V0YXxlbnwwfHwwfHx8MA%3D%3D',
       rating: 4.5,
     },
     {
       name: 'Gunung Bromo',
       category: 'Gunung',
-      image: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=800',
+      image: 'https://images.unsplash.com/photo-1602154663343-89fe0bf541ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3VudW5nJTIwYnJvbW98ZW58MHx8MHx8fDA%3D',
       rating: 4.8,
     },
     {
       name: 'Candi Borobudur',
       category: 'Budaya',
-      image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800',
+      image: 'https://images.unsplash.com/photo-1620549146396-9024d914cd99?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Q2FuZGklMjBCb3JvYnVkdXJ8ZW58MHx8MHx8fDA%3D',
       rating: 4.9,
     },
   ];

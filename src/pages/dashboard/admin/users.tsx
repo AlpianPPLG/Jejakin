@@ -42,7 +42,7 @@ function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
@@ -80,10 +80,12 @@ function AdminUsersPage() {
     }
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase()) ||
-    user.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase());
+    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('id-ID', {
@@ -180,7 +182,7 @@ function AdminUsersPage() {
                     <SelectValue placeholder="All Roles" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Roles</SelectItem>
+                    <SelectItem value="all">All Roles</SelectItem>
                     <SelectItem value="user">User</SelectItem>
                     <SelectItem value="partner">Partner</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>

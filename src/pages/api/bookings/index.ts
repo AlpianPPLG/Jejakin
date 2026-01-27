@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { sendBookingConfirmationEmail, sendNewBookingNotificationToAdmin } from '@/lib/email';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // GET - List user's bookings
@@ -158,10 +159,100 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               name: true,
               location: true,
               images: true,
+              userId: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
             },
           },
         },
       });
+
+      // Create notification for user
+      await prisma.notification.create({
+        data: {
+          userId: authUser.userId,
+          type: 'booking_created',
+          title: 'Booking Berhasil Dibuat',
+          message: `Booking Anda untuk ${destination.name} telah berhasil dibuat. Kode booking: ${bookingCode}. Silakan lakukan pembayaran.`,
+          link: `/dashboard/bookings/${booking.id}`,
+        },
+      });
+
+      // Create notification for destination owner (partner)
+      if (destination.userId) {
+        await prisma.notification.create({
+          data: {
+            userId: destination.userId,
+            type: 'new_booking',
+            title: 'Booking Baru',
+            message: `${booking.user.name} (${booking.user.email}) telah membuat booking untuk ${destination.name}. Tanggal kunjungan: ${new Date(visitDate).toLocaleDateString('id-ID')}. Jumlah: ${numberOfPeople} orang. Total: Rp ${totalPrice.toLocaleString('id-ID')}.`,
+            link: `/dashboard/admin/bookings`,
+          },
+        });
+      }
+
+      // Create notification for all admins
+      const admins = await prisma.user.findMany({
+        where: { role: 'admin' },
+        select: { id: true, email: true },
+      });
+
+      for (const admin of admins) {
+        await prisma.notification.create({
+          data: {
+            userId: admin.id,
+            type: 'new_booking',
+            title: 'Booking Baru',
+            message: `${booking.user.name} (${booking.user.email}) telah membuat booking untuk ${destination.name}. Tanggal kunjungan: ${new Date(visitDate).toLocaleDateString('id-ID')}. Jumlah: ${numberOfPeople} orang. Total: Rp ${totalPrice.toLocaleString('id-ID')}.`,
+            link: `/dashboard/admin/bookings`,
+          },
+        });
+      }
+
+      // Send email notifications (async, don't wait)
+      const emailData = {
+        userName: booking.user.name,
+        userEmail: booking.user.email,
+        bookingCode,
+        destinationName: destination.name,
+        destinationLocation: destination.location,
+        visitDate: new Date(visitDate).toLocaleDateString('id-ID', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        numberOfPeople: parseInt(numberOfPeople),
+        totalPrice,
+        notes: notes || undefined,
+      };
+
+      // Send confirmation email to user
+      sendBookingConfirmationEmail(emailData).catch(console.error);
+
+      // Send notification email to admins
+      for (const admin of admins) {
+        if (admin.email) {
+          sendNewBookingNotificationToAdmin(emailData, admin.email).catch(console.error);
+        }
+      }
+
+      // Send notification to destination owner
+      if (destination.user && destination.user.email) {
+        sendNewBookingNotificationToAdmin(emailData, destination.user.email).catch(console.error);
+      }
 
       return res.status(201).json({
         success: true,

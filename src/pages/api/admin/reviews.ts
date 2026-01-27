@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { verifyToken } from '@/lib/auth';
-import prisma from '@/lib/prisma';
-import { apiResponse, apiError } from '@/lib/api-response';
+import { prisma } from '@/lib/prisma';
+import { successResponse, errorResponse } from '@/lib/api-response';
 import { AppError } from '@/lib/errors';
 
 export default async function handler(
@@ -12,12 +12,12 @@ export default async function handler(
     // Verify admin authentication
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
-      return res.status(401).json(apiError('Token tidak ditemukan', 401));
+      return errorResponse(res, 'Token tidak ditemukan', 401);
     }
 
     const decoded = verifyToken(token);
     if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'partner')) {
-      return res.status(403).json(apiError('Akses ditolak', 403));
+      return errorResponse(res, 'Akses ditolak', 403);
     }
 
     switch (req.method) {
@@ -26,14 +26,14 @@ export default async function handler(
       case 'DELETE':
         return await deleteReview(req, res, decoded);
       default:
-        return res.status(405).json(apiError('Method tidak diizinkan', 405));
+        return errorResponse(res, 'Method tidak diizinkan', 405);
     }
   } catch (error) {
     console.error('Admin reviews API error:', error);
     if (error instanceof AppError) {
-      return res.status(error.statusCode).json(apiError(error.message, error.statusCode));
+      return errorResponse(res, error.message, error.statusCode);
     }
-    return res.status(500).json(apiError('Terjadi kesalahan server', 500));
+    return errorResponse(res, 'Terjadi kesalahan server', 500);
   }
 }
 
@@ -112,26 +112,24 @@ async function getReviews(req: NextApiRequest, res: NextApiResponse, user: any) 
 
   const totalPages = Math.ceil(total / limitNum);
 
-  return res.status(200).json(
-    apiResponse('Reviews berhasil dimuat', {
-      reviews,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        totalPages,
-        hasNext: pageNum < totalPages,
-        hasPrev: pageNum > 1
-      }
-    })
-  );
+  return successResponse(res, {
+    reviews,
+    pagination: {
+      page: pageNum,
+      limit: limitNum,
+      total,
+      totalPages,
+      hasNext: pageNum < totalPages,
+      hasPrev: pageNum > 1
+    }
+  }, 'Reviews berhasil dimuat');
 }
 
 async function deleteReview(req: NextApiRequest, res: NextApiResponse, user: any) {
   const { id } = req.query;
 
   if (!id) {
-    return res.status(400).json(apiError('ID review tidak ditemukan', 400));
+    return errorResponse(res, 'ID review tidak ditemukan', 400);
   }
 
   // Check if review exists
@@ -147,12 +145,12 @@ async function deleteReview(req: NextApiRequest, res: NextApiResponse, user: any
   });
 
   if (!review) {
-    return res.status(404).json(apiError('Review tidak ditemukan', 404));
+    return errorResponse(res, 'Review tidak ditemukan', 404);
   }
 
   // If partner, check if they own the destination
   if (user.role === 'partner' && review.destination.userId !== user.userId) {
-    return res.status(403).json(apiError('Anda tidak memiliki akses untuk menghapus review ini', 403));
+    return errorResponse(res, 'Anda tidak memiliki akses untuk menghapus review ini', 403);
   }
 
   // Delete review
@@ -175,5 +173,5 @@ async function deleteReview(req: NextApiRequest, res: NextApiResponse, user: any
     data: { rating: avgRating }
   });
 
-  return res.status(200).json(apiResponse('Review berhasil dihapus'));
+  return successResponse(res, null, 'Review berhasil dihapus');
 }

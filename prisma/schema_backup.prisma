@@ -1,0 +1,114 @@
+// Prisma Schema for Jejakin - Platform Pariwisata Indonesia
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          String    @default("user") // user, partner, admin
+  avatar        String?
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  destinations  Destination[]
+  bookings      Booking[]
+  reviews       Review[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// Destination (Tempat Wisata)
+model Destination {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String    @db.Text
+  location    String
+  province    String
+  city        String
+  category    String    // pantai, gunung, budaya, kuliner, dll
+  price       Int       @default(0)
+  rating      Float     @default(0)
+  images      Json      // Array of image URLs
+  facilities  Json      // Array of facilities
+  latitude    Float?
+  longitude   Float?
+  status      String    @default("active") // active, inactive, pending
+  userId      String    // Partner yang mengelola
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  // Relations
+  user     User       @relation(fields: [userId], references: [id])
+  bookings Booking[]
+  reviews  Review[]
+
+  @@index([slug])
+  @@index([userId])
+  @@index([category])
+  @@index([province])
+  @@index([status])
+  @@map("destinations")
+}
+
+// Booking (Pemesanan)
+model Booking {
+  id            String    @id @default(cuid())
+  bookingCode   String    @unique
+  userId        String
+  destinationId String
+  visitDate     DateTime
+  numberOfPeople Int
+  totalPrice    Int
+  status        String    @default("pending") // pending, confirmed, cancelled, completed
+  paymentStatus String    @default("unpaid") // unpaid, paid, refunded
+  notes         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user        User        @relation(fields: [userId], references: [id])
+  destination Destination @relation(fields: [destinationId], references: [id])
+
+  @@index([userId])
+  @@index([destinationId])
+  @@index([bookingCode])
+  @@index([status])
+  @@map("bookings")
+}
+
+// Review (Ulasan)
+model Review {
+  id            String    @id @default(cuid())
+  userId        String
+  destinationId String
+  rating        Int       // 1-5
+  comment       String    @db.Text
+  images        Json?     // Array of image URLs
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user        User        @relation(fields: [userId], references: [id])
+  destination Destination @relation(fields: [destinationId], references: [id])
+
+  @@index([userId])
+  @@index([destinationId])
+  @@map("reviews")
+}

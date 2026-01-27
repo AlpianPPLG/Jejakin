@@ -30,8 +30,8 @@ export default function DestinationsPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [provinceFilter, setProvinceFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [provinceFilter, setProvinceFilter] = useState('all');
   const [sortBy, setSortBy] = useState('createdAt');
 
   useEffect(() => {
@@ -42,8 +42,8 @@ export default function DestinationsPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (categoryFilter) params.append('category', categoryFilter);
-      if (provinceFilter) params.append('province', provinceFilter);
+      if (categoryFilter && categoryFilter !== 'all') params.append('category', categoryFilter);
+      if (provinceFilter && provinceFilter !== 'all') params.append('province', provinceFilter);
       params.append('sortBy', sortBy);
       params.append('limit', '50');
 
@@ -124,7 +124,7 @@ export default function DestinationsPage() {
                     <SelectValue placeholder="Semua Kategori" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Semua Kategori</SelectItem>
+                    <SelectItem value="all">Semua Kategori</SelectItem>
                     <SelectItem value="BEACH">Pantai</SelectItem>
                     <SelectItem value="MOUNTAIN">Gunung</SelectItem>
                     <SelectItem value="CULTURAL">Budaya</SelectItem>
@@ -138,7 +138,7 @@ export default function DestinationsPage() {
                     <SelectValue placeholder="Semua Provinsi" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Semua Provinsi</SelectItem>
+                    <SelectItem value="all">Semua Provinsi</SelectItem>
                     {uniqueProvinces.map((province) => (
                       <SelectItem key={province} value={province}>
                         {province}

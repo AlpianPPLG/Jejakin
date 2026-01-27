@@ -78,7 +78,7 @@ export default function AdminReviews() {
 
   // Filters
   const [search, setSearch] = useState('');
-  const [ratingFilter, setRatingFilter] = useState('');
+  const [ratingFilter, setRatingFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
 
   // Delete dialog
@@ -109,7 +109,7 @@ export default function AdminReviews() {
       });
 
       if (search) params.append('search', search);
-      if (ratingFilter) params.append('rating', ratingFilter);
+      if (ratingFilter && ratingFilter !== 'all') params.append('rating', ratingFilter);
 
       const response = await apiClient(`/api/admin/reviews?${params}`);
       
@@ -235,7 +235,7 @@ export default function AdminReviews() {
                     <SelectValue placeholder="Semua Rating" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Semua Rating</SelectItem>
+                    <SelectItem value="all">Semua Rating</SelectItem>
                     <SelectItem value="5">5 Bintang</SelectItem>
                     <SelectItem value="4">4 Bintang</SelectItem>
                     <SelectItem value="3">3 Bintang</SelectItem>

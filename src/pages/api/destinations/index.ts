@@ -13,6 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         search = '',
         category = '',
         province = '',
+        slug = '',
+        status = 'active',
         sortBy = 'createdAt',
         order = 'desc',
       } = req.query;
@@ -23,9 +25,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Build where clause
       const where: any = {
-        status: 'active',
         deletedAt: null,
       };
+
+      // If slug is provided, search by slug
+      if (slug) {
+        where.slug = slug as string;
+      } else {
+        // Only filter by status if not searching by slug
+        where.status = status as string;
+      }
 
       if (search) {
         where.OR = [
