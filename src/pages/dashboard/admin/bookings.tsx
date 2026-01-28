@@ -43,7 +43,7 @@ interface Booking {
 function AdminBookingsPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const { showError } = useToast();
+  const { showError, showSuccess } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -136,6 +136,64 @@ function AdminBookingsPage() {
         {paymentStatus}
       </Badge>
     );
+  };
+
+  const handleStatusUpdate = async (bookingId: string, newStatus: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showError('Session expired. Please login again.');
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update status');
+
+      showSuccess(`Status booking berhasil diubah ke ${newStatus}`);
+      
+      // Refresh bookings
+      await fetchBookings();
+    } catch (error) {
+      showError('Gagal update status booking');
+    }
+  };
+
+  const handlePaymentStatusUpdate = async (bookingId: string, newPaymentStatus: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showError('Session expired. Please login again.');
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ paymentStatus: newPaymentStatus }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update payment status');
+
+      showSuccess(`Payment status berhasil diubah ke ${newPaymentStatus}`);
+      
+      // Refresh bookings
+      await fetchBookings();
+    } catch (error) {
+      showError('Gagal update payment status');
+    }
   };
 
   return (
@@ -244,14 +302,14 @@ function AdminBookingsPage() {
                         <TableHead>Status</TableHead>
                         <TableHead>Payment</TableHead>
                         <TableHead>Created</TableHead>
+                        <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredBookings.map((booking) => (
                         <TableRow
                           key={booking.id}
-                          className="cursor-pointer hover:bg-gray-50"
-                          onClick={() => router.push(`/dashboard/bookings/${booking.id}`)}
+                          className="hover:bg-gray-50"
                         >
                           <TableCell className="font-mono text-sm">
                             {booking.bookingCode}
@@ -273,10 +331,47 @@ function AdminBookingsPage() {
                           <TableCell className="font-semibold text-blue-600">
                             {formatCurrency(booking.totalPrice)}
                           </TableCell>
-                          <TableCell>{getStatusBadge(booking.status)}</TableCell>
-                          <TableCell>{getPaymentBadge(booking.paymentStatus)}</TableCell>
+                          <TableCell>
+                            <Select
+                              value={booking.status}
+                              onValueChange={(value) => handleStatusUpdate(booking.id, value)}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="confirmed">Confirmed</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                                <SelectItem value="cancelled">Cancelled</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                          <TableCell>
+                            <Select
+                              value={booking.paymentStatus}
+                              onValueChange={(value) => handlePaymentStatusUpdate(booking.id, value)}
+                            >
+                              <SelectTrigger className="w-28">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="unpaid">Unpaid</SelectItem>
+                                <SelectItem value="paid">Paid</SelectItem>
+                                <SelectItem value="refunded">Refunded</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
                           <TableCell className="text-sm text-gray-500">
                             {formatDate(booking.createdAt)}
+                          </TableCell>
+                          <TableCell>
+                            <button
+                              onClick={() => router.push(`/dashboard/bookings/${booking.id}`)}
+                              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                            >
+                              View Details
+                            </button>
                           </TableCell>
                         </TableRow>
                       ))}

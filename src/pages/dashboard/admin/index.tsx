@@ -311,7 +311,7 @@ function AdminDashboardPage() {
                     <div className="text-xs text-gray-500">View all bookings</div>
                   </button>
                 </Link>
-                <Link href="/dashboard/destinations">
+                <Link href="/dashboard/admin/destinations">
                   <button className="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="text-2xl mb-2">🏝️</div>
                     <div className="font-semibold">Destinations</div>
@@ -319,13 +319,22 @@ function AdminDashboardPage() {
                   </button>
                 </Link>
                 {user?.role === 'admin' && (
-                  <Link href="/dashboard/admin/users">
-                    <button className="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="text-2xl mb-2">👥</div>
-                      <div className="font-semibold">Users</div>
-                      <div className="text-xs text-gray-500">Manage users</div>
-                    </button>
-                  </Link>
+                  <>
+                    <Link href="/dashboard/admin/users">
+                      <button className="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">
+                        <div className="text-2xl mb-2">👥</div>
+                        <div className="font-semibold">Users</div>
+                        <div className="text-xs text-gray-500">Manage users</div>
+                      </button>
+                    </Link>
+                    <Link href="/dashboard/admin/categories">
+                      <button className="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">
+                        <div className="text-2xl mb-2">📁</div>
+                        <div className="font-semibold">Categories</div>
+                        <div className="text-xs text-gray-500">Manage categories</div>
+                      </button>
+                    </Link>
+                  </>
                 )}
                 <Link href="/dashboard/admin/reviews">
                   <button className="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">

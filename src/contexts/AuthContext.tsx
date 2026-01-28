@@ -102,7 +102,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       localStorage.setItem('token', result.token);
       setUser(result.user);
-      router.push('/dashboard');
+      
+      // Redirect based on role
+      if (result.user.role === 'admin') {
+        router.push('/dashboard/admin');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (error: any) {
       throw error;
     }

@@ -118,25 +118,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         notes,
       } = req.body;
 
+      // Partner and Admin can update status and paymentStatus
+      // Regular users can only update notes
+      const updateData: any = {};
+
+      if (isPartner || isAdmin) {
+        if (status) updateData.status = status;
+        if (paymentStatus) updateData.paymentStatus = paymentStatus;
+      }
+
+      if (visitDate) updateData.visitDate = new Date(visitDate);
+      if (notes !== undefined) updateData.notes = notes;
+
       // Calculate new total price if numberOfPeople changed
-      let totalPrice = existingBooking.totalPrice;
       if (numberOfPeople && numberOfPeople !== existingBooking.numberOfPeople) {
-        totalPrice = existingBooking.destination.price * parseInt(numberOfPeople);
+        updateData.numberOfPeople = parseInt(numberOfPeople);
+        updateData.totalPrice = existingBooking.destination.price * parseInt(numberOfPeople);
       }
 
       // Update booking
       const booking = await prisma.booking.update({
         where: { id: id as string },
-        data: {
-          ...(visitDate && { visitDate: new Date(visitDate) }),
-          ...(numberOfPeople && { 
-            numberOfPeople: parseInt(numberOfPeople),
-            totalPrice,
-          }),
-          ...(status && { status }),
-          ...(paymentStatus && { paymentStatus }),
-          ...(notes !== undefined && { notes }),
-        },
+        data: updateData,
         include: {
           destination: {
             select: {
@@ -148,6 +151,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         },
       });
+
+      // Create notification for user if status changed
+      if (status && status !== existingBooking.status) {
+        await prisma.notification.create({
+          data: {
+            userId: existingBooking.userId,
+            type: 'booking_status_updated',
+            title: 'Booking Status Updated',
+            message: `Your booking ${existingBooking.bookingCode} status has been updated to ${status}`,
+            link: `/dashboard/bookings/${existingBooking.id}`,
+          },
+        });
+      }
+
+      // Create notification for user if payment status changed
+      if (paymentStatus && paymentStatus !== existingBooking.paymentStatus) {
+        await prisma.notification.create({
+          data: {
+            userId: existingBooking.userId,
+            type: 'payment_status_updated',
+            title: 'Payment Status Updated',
+            message: `Your payment for booking ${existingBooking.bookingCode} has been updated to ${paymentStatus}`,
+            link: `/dashboard/bookings/${existingBooking.id}`,
+          },
+        });
+      }
 
       return res.status(200).json({
         success: true,

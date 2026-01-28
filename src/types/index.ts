@@ -19,7 +19,7 @@ export interface RegisterData {
   name: string;
   email: string;
   password: string;
-  role?: 'user' | 'partner';
+  role?: 'user' | 'partner' | 'admin';
 }
 
 export interface AuthResponse {

@@ -33,6 +33,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
+    // Validate role
+    const validRoles = ['user', 'partner', 'admin'];
+    const userRole = validRoles.includes(role) ? role : 'user';
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -54,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         name,
         email,
         password: hashedPassword,
-        role: role === 'partner' ? 'partner' : 'user',
+        role: userRole,
       },
       select: {
         id: true,

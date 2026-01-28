@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'user' | 'partner' | 'admin'>('user');
   const [loading, setLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
   const { showSuccess, showError } = useToast();
@@ -82,6 +83,48 @@ export default function LoginPage() {
                   required
                   disabled={loading}
                 />
+              </div>
+
+              {/* Role Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Masuk sebagai
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRole('user')}
+                    className={`p-3 rounded-lg border-2 transition-all ${
+                      role === 'user'
+                        ? 'border-primary-600 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="font-semibold text-sm">Wisatawan</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole('partner')}
+                    className={`p-3 rounded-lg border-2 transition-all ${
+                      role === 'partner'
+                        ? 'border-primary-600 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="font-semibold text-sm">Partner</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole('admin')}
+                    className={`p-3 rounded-lg border-2 transition-all ${
+                      role === 'admin'
+                        ? 'border-primary-600 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="font-semibold text-sm">Admin</div>
+                  </button>
+                </div>
               </div>
 
               <Button

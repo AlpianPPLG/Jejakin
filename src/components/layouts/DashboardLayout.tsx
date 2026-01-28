@@ -40,8 +40,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     ] : []),
     ...(user?.role === 'admin' ? [
       { name: 'Admin Panel', href: '/dashboard/admin', icon: '⚙️' },
-      { name: 'Users', href: '/dashboard/admin/users', icon: '👥' },
-      { name: 'Reviews', href: '/dashboard/admin/reviews', icon: '⭐' },
+      { name: 'Manage Bookings', href: '/dashboard/admin/bookings', icon: '📋' },
+      { name: 'Manage Destinations', href: '/dashboard/admin/destinations', icon: '🗺️' },
+      { name: 'Manage Users', href: '/dashboard/admin/users', icon: '👥' },
+      { name: 'Manage Categories', href: '/dashboard/admin/categories', icon: '📁' },
+      { name: 'Manage Reviews', href: '/dashboard/admin/reviews', icon: '⭐' },
     ] : []),
   ];
 

@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState<'user' | 'partner'>('user');
+  const [role, setRole] = useState<'user' | 'partner' | 'admin'>('user');
   const [loading, setLoading] = useState(false);
   const { register, isAuthenticated } = useAuth();
   const { showSuccess, showError } = useToast();
@@ -130,7 +130,7 @@ export default function RegisterPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Daftar sebagai
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   <button
                     type="button"
                     onClick={() => setRole('user')}
@@ -140,7 +140,7 @@ export default function RegisterPage() {
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <div className="font-semibold">Wisatawan</div>
+                    <div className="font-semibold text-sm">Wisatawan</div>
                     <div className="text-xs text-gray-500">Booking destinasi</div>
                   </button>
                   <button
@@ -152,8 +152,20 @@ export default function RegisterPage() {
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <div className="font-semibold">Partner</div>
+                    <div className="font-semibold text-sm">Partner</div>
                     <div className="text-xs text-gray-500">Kelola destinasi</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole('admin')}
+                    className={`p-3 rounded-lg border-2 transition-all ${
+                      role === 'admin'
+                        ? 'border-primary-600 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="font-semibold text-sm">Admin</div>
+                    <div className="text-xs text-gray-500">Kelola platform</div>
                   </button>
                 </div>
               </div>
