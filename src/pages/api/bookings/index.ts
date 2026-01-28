@@ -119,6 +119,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Get destination
       const destination = await prisma.destination.findUnique({
         where: { id: destinationId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
       });
 
       if (!destination) {
