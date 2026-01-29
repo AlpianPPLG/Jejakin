@@ -23,17 +23,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Build where clause
       const where: any = {};
 
-      // Admin can see all bookings, others only their own
+      // Admin can see all bookings
+      // Partner can see ALL bookings (global access for all partners)
+      // User can see their own bookings
       if (authUser.role === 'admin') {
         if (userId) {
           where.userId = userId as string;
         }
+      } else if (authUser.role === 'partner') {
+        // Partner sees ALL bookings (tidak ada filter)
+        // Semua partner bisa kelola semua booking
       } else {
+        // Regular user sees only their own bookings
         where.userId = authUser.userId;
       }
 
       if (status) {
         where.status = status;
+      }
+
+      // Add paymentStatus filter if provided
+      const { paymentStatus } = req.query;
+      if (paymentStatus) {
+        where.paymentStatus = paymentStatus;
       }
 
       // Get total count
@@ -62,6 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               id: true,
               name: true,
               email: true,
+              phone: true,
             },
           },
         },
@@ -207,7 +220,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             type: 'new_booking',
             title: 'Booking Baru',
             message: `${booking.user.name} (${booking.user.email}) telah membuat booking untuk ${destination.name}. Tanggal kunjungan: ${new Date(visitDate).toLocaleDateString('id-ID')}. Jumlah: ${numberOfPeople} orang. Total: Rp ${totalPrice.toLocaleString('id-ID')}.`,
-            link: `/dashboard/admin/bookings`,
+            link: `/dashboard/partner/bookings`,
           },
         });
       }

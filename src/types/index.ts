@@ -13,6 +13,7 @@ export interface User {
 export interface LoginCredentials {
   email: string;
   password: string;
+  role?: 'user' | 'partner' | 'admin';
 }
 
 export interface RegisterData {

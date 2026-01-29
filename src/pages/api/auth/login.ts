@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     // Validation
     if (!email || !password) {
@@ -37,6 +37,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
+      });
+    }
+
+    // Validate role if provided
+    if (role && user.role !== role) {
+      return res.status(403).json({
+        success: false,
+        message: `Akun ini tidak terdaftar sebagai ${role}. Silakan pilih role yang sesuai.`,
       });
     }
 

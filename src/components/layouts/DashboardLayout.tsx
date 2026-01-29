@@ -35,10 +35,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Wishlist', href: '/dashboard/wishlist', icon: '❤️' },
     { name: 'Bookings', href: '/dashboard/bookings', icon: '📅' },
     { name: 'Notifications', href: '/dashboard/notifications', icon: '🔔' },
-    ...(user?.role === 'partner' || user?.role === 'admin' ? [
+    ...(user?.role === 'partner' ? [
       { name: 'Destinations', href: '/dashboard/destinations', icon: '🏝️' },
+      { name: 'Kelola Booking', href: '/dashboard/partner/bookings', icon: '📋' },
     ] : []),
     ...(user?.role === 'admin' ? [
+      { name: 'Destinations', href: '/dashboard/destinations', icon: '🏝️' },
       { name: 'Admin Panel', href: '/dashboard/admin', icon: '⚙️' },
       { name: 'Manage Bookings', href: '/dashboard/admin/bookings', icon: '📋' },
       { name: 'Manage Destinations', href: '/dashboard/admin/destinations', icon: '🗺️' },

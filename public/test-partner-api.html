@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Partner API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background: #0070f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0051cc;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Partner API</h1>
+    
+    <div class="section">
+        <h2>1. Login sebagai Partner</h2>
+        <button onclick="loginPartner()">Login Partner</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. Cek User Info</h2>
+        <button onclick="checkUser()">Check User</button>
+        <div id="userResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. Fetch Bookings</h2>
+        <button onclick="fetchBookings()">Fetch Bookings</button>
+        <div id="bookingsResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. Fetch Notifications</h2>
+        <button onclick="fetchNotifications()">Fetch Notifications</button>
+        <div id="notificationsResult"></div>
+    </div>
+
+    <script>
+        async function loginPartner() {
+            const result = document.getElementById('loginResult');
+            result.innerHTML = 'Loading...';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'partner@jejakin.com',
+                        password: 'password123',
+                        role: 'partner'
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    result.innerHTML = `
+                        <p class="success">✅ Login berhasil!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login gagal!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function checkUser() {
+            const result = document.getElementById('userResult');
+            result.innerHTML = 'Loading...';
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                result.innerHTML = '<p class="error">❌ No token found. Please login first.</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ User info loaded!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Failed to load user!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function fetchBookings() {
+            const result = document.getElementById('bookingsResult');
+            result.innerHTML = 'Loading...';
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                result.innerHTML = '<p class="error">❌ No token found. Please login first.</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/bookings', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Bookings loaded! Found: ${data.data.length} bookings</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Failed to load bookings!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function fetchNotifications() {
+            const result = document.getElementById('notificationsResult');
+            result.innerHTML = 'Loading...';
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                result.innerHTML = '<p class="error">❌ No token found. Please login first.</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/notifications', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Notifications loaded! Found: ${data.data.length} notifications</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Failed to load notifications!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

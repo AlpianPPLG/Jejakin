@@ -47,10 +47,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Check permission
+      // Admin, Partner, and booking owner can view
       if (
         authUser.role !== 'admin' &&
-        booking.userId !== authUser.userId &&
-        booking.destination.userId !== authUser.userId
+        authUser.role !== 'partner' &&
+        booking.userId !== authUser.userId
       ) {
         return res.status(403).json({
           success: false,
@@ -100,7 +101,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Check permission
       const isOwner = existingBooking.userId === authUser.userId;
-      const isPartner = existingBooking.destination.userId === authUser.userId;
+      const isPartner = authUser.role === 'partner'; // Semua partner bisa update
       const isAdmin = authUser.role === 'admin';
 
       if (!isOwner && !isPartner && !isAdmin) {

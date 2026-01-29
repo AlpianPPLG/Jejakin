@@ -29,7 +29,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login({ email, password });
+      await login({ email, password, role });
       showSuccess('Login berhasil!');
     } catch (error: any) {
       showError(error.message || 'Login gagal. Silakan coba lagi.');
