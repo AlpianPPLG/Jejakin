@@ -1,0 +1,202 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0" version="29.3.6">
+  <diagram name="Admin Flow - Jejakin" id="admin-flow">
+    <mxGraphModel dx="899" dy="615" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1" value="START" vertex="1">
+          <mxGeometry height="60" width="120" x="520" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="landing" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" value="Landing Page&#xa;(index.tsx)" vertex="1">
+          <mxGeometry height="60" width="160" x="500" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="landing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1" value="Login/Register&#xa;as ADMIN&#xa;&#xa;- Input: Email, Password&#xa;- Select Role: Admin" vertex="1">
+          <mxGeometry height="100" width="180" x="490" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="landing" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="auth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="authSuccess" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Authentication Success&#xa;Token stored in localStorage&#xa;Role: ADMIN" vertex="1">
+          <mxGeometry height="70" width="180" x="490" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="auth" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="authSuccess">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1" value="Admin Dashboard&#xa;(dashboard/admin/index.tsx)&#xa;&#xa;- Overview Statistics&#xa;- Recent Bookings&#xa;- Top Destinations&#xa;- Quick Actions" vertex="1">
+          <mxGeometry height="120" width="180" x="490" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="authSuccess" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="manageBookings" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Manage Bookings&#xa;(dashboard/admin/bookings.tsx)&#xa;&#xa;- View All Bookings&#xa;- Search and Filter&#xa;- Update Status&#xa;- Update Payment Status&#xa;- View Details" vertex="1">
+          <mxGeometry height="140" width="200" x="80" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="manageBookings" value="Manage&#xa;Bookings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="manageDestinations" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Manage Destinations&#xa;(dashboard/admin/destinations.tsx)&#xa;&#xa;- View All Destinations&#xa;- Search and Filter&#xa;- Update Status&#xa;- Delete Destination&#xa;- View Details" vertex="1">
+          <mxGeometry height="140" width="200" x="320" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="manageDestinations" value="Manage&#xa;Destinations">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="manageUsers" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Manage Users&#xa;(dashboard/admin/users.tsx)&#xa;&#xa;- View All Users&#xa;- Search and Filter&#xa;- View User Activity&#xa;- User Statistics" vertex="1">
+          <mxGeometry height="120" width="200" x="560" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="manageUsers" value="Manage&#xa;Users">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="manageCategories" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Manage Categories&#xa;(dashboard/admin/categories.tsx)&#xa;&#xa;- View All Categories&#xa;- Create New Category&#xa;- Edit Category&#xa;- Delete Category&#xa;- Toggle Active Status" vertex="1">
+          <mxGeometry height="140" width="200" x="800" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="manageCategories" value="Manage&#xa;Categories">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="manageReviews" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Manage Reviews&#xa;(dashboard/admin/reviews.tsx)&#xa;&#xa;- View All Reviews&#xa;- Search and Filter&#xa;- Delete Review&#xa;- Moderate Content" vertex="1">
+          <mxGeometry height="120" width="200" x="200" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="manageReviews" value="Manage&#xa;Reviews">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bookingDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Booking Management&#xa;&#xa;Features:&#xa;- View Booking List&#xa;- Filter by Status&#xa;- Search by Code/User/Destination&#xa;- Update Booking Status&#xa;  (Pending/Confirmed/Completed/Cancelled)&#xa;- Update Payment Status&#xa;  (Unpaid/Paid/Refunded)&#xa;- View Full Details&#xa;- Statistics Dashboard" vertex="1">
+          <mxGeometry height="200" width="280" x="40" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="edge10" edge="1" parent="1" source="manageBookings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bookingDetail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="destDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Destination Management&#xa;&#xa;Features:&#xa;- View All Destinations&#xa;- Filter by Status/Category&#xa;- Search by Name/Location/Partner&#xa;- Update Status&#xa;  (Active/Pending/Inactive)&#xa;- Delete Destination (Soft Delete)&#xa;- View Bookings Count&#xa;- View Reviews Count&#xa;- View Partner Info" vertex="1">
+          <mxGeometry height="200" width="280" x="360" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="edge11" edge="1" parent="1" source="manageDestinations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="destDetail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="userDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="User Management&#xa;&#xa;Features:&#xa;- View All Users&#xa;- Filter by Role (User/Partner/Admin)&#xa;- Search by Name/Email&#xa;- View User Activity&#xa;  (Bookings, Destinations, Reviews)&#xa;- View Email Verification Status&#xa;- View Join Date&#xa;- User Statistics" vertex="1">
+          <mxGeometry height="180" width="280" x="680" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="edge12" edge="1" parent="1" source="manageUsers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="userDetail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="categoryDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Category Management&#xa;&#xa;Features:&#xa;- View All Categories&#xa;- Create New Category&#xa;  (Name, Icon, Description)&#xa;- Edit Category&#xa;- Delete Category&#xa;- Toggle Active/Inactive&#xa;- View Category Statistics" vertex="1">
+          <mxGeometry height="160" width="280" x="40" y="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="edge13" edge="1" parent="1" source="manageCategories" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="categoryDetail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reviewDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Review Management&#xa;&#xa;Features:&#xa;- View All Reviews&#xa;- Filter by Rating (1-5 stars)&#xa;- Search by User/Destination&#xa;- View Review Details&#xa;- Delete Inappropriate Reviews&#xa;- View User Info&#xa;- View Destination Info&#xa;- Pagination Support" vertex="1">
+          <mxGeometry height="180" width="280" x="360" y="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="edge14" edge="1" parent="1" source="manageReviews" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="reviewDetail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="stats" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1" value="Statistics Dashboard&#xa;(API: GET /api/admin/stats)&#xa;&#xa;Overview:&#xa;- Total Users&#xa;- Total Destinations&#xa;- Total Bookings&#xa;- Total Revenue&#xa;&#xa;Booking Stats:&#xa;- Pending Count&#xa;- Confirmed Count&#xa;- Completed Count&#xa;- Cancelled Count&#xa;&#xa;Additional:&#xa;- Recent Bookings (10)&#xa;- Top Destinations&#xa;- Monthly Revenue" vertex="1">
+          <mxGeometry height="280" width="280" x="680" y="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="edge15" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="stats" value="View Stats">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="apiBooking" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Booking API Operations&#xa;(API: /api/admin/bookings)&#xa;&#xa;GET:&#xa;- List all bookings&#xa;- Filter by status&#xa;- Search functionality&#xa;- Pagination&#xa;- Statistics&#xa;&#xa;PUT:&#xa;- Update booking status&#xa;- Update payment status&#xa;- Send notifications" vertex="1">
+          <mxGeometry height="200" width="240" x="40" y="1560" as="geometry" />
+        </mxCell>
+        <mxCell id="edge16" edge="1" parent="1" source="bookingDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="apiBooking" value="API Calls">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="apiDestination" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Destination API Operations&#xa;(API: /api/destinations)&#xa;&#xa;GET:&#xa;- List all destinations&#xa;- Filter by status/category&#xa;- Search functionality&#xa;&#xa;PUT:&#xa;- Update destination status&#xa;- Update destination info&#xa;&#xa;DELETE:&#xa;- Soft delete destination" vertex="1">
+          <mxGeometry height="200" width="240" x="320" y="1560" as="geometry" />
+        </mxCell>
+        <mxCell id="edge17" edge="1" parent="1" source="destDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="apiDestination" value="API Calls">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="apiUser" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="User API Operations&#xa;(API: /api/admin/users)&#xa;&#xa;GET:&#xa;- List all users&#xa;- Filter by role&#xa;- Search by name/email&#xa;- User statistics&#xa;- Activity counts" vertex="1">
+          <mxGeometry height="160" width="240" x="600" y="1560" as="geometry" />
+        </mxCell>
+        <mxCell id="edge18" edge="1" parent="1" source="userDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="apiUser" value="API Calls">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="apiCategory" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Category API Operations&#xa;(API: /api/categories)&#xa;&#xa;GET:&#xa;- List all categories&#xa;&#xa;POST:&#xa;- Create new category&#xa;&#xa;PUT:&#xa;- Update category&#xa;- Toggle active status&#xa;&#xa;DELETE:&#xa;- Delete category" vertex="1">
+          <mxGeometry height="180" width="240" x="880" y="1560" as="geometry" />
+        </mxCell>
+        <mxCell id="edge19" edge="1" parent="1" source="categoryDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="apiCategory" value="API Calls">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="notifSystem" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Notification System&#xa;&#xa;Admin Receives:&#xa;- New User Registration&#xa;- New Destination Created&#xa;- New Booking Created&#xa;- Payment Received&#xa;- New Review Added&#xa;- System Alerts&#xa;&#xa;Admin Sends:&#xa;- Status Updates&#xa;- System Announcements&#xa;- Moderation Actions" vertex="1">
+          <mxGeometry height="220" width="240" x="40" y="1820" as="geometry" />
+        </mxCell>
+        <mxCell id="edge20" edge="1" parent="1" source="apiBooking" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="notifSystem" value="Auto Notify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="permissions" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1" value="Admin Permissions&#xa;&#xa;Full Access:&#xa;- All Bookings (any partner)&#xa;- All Destinations (any partner)&#xa;- All Users&#xa;- All Categories&#xa;- All Reviews&#xa;- System Settings&#xa;- Statistics&#xa;&#xa;Can:&#xa;- Create/Edit/Delete anything&#xa;- Update any status&#xa;- Moderate content&#xa;- View all data" vertex="1">
+          <mxGeometry height="260" width="240" x="320" y="1820" as="geometry" />
+        </mxCell>
+        <mxCell id="edge21" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="permissions" value="Authorization">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reports" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1" value="Reports and Analytics&#xa;&#xa;Available Reports:&#xa;- Revenue Report&#xa;- Booking Trends&#xa;- User Growth&#xa;- Destination Performance&#xa;- Partner Performance&#xa;- Category Distribution&#xa;- Review Analytics&#xa;- Monthly/Yearly Stats&#xa;&#xa;Export Options:&#xa;- CSV Export&#xa;- PDF Reports&#xa;- Excel Format" vertex="1">
+          <mxGeometry height="260" width="240" x="600" y="1820" as="geometry" />
+        </mxCell>
+        <mxCell id="edge22" edge="1" parent="1" source="stats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="reports" value="Generate Reports">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="monitoring" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1" value="System Monitoring&#xa;&#xa;Monitor:&#xa;- Platform Health&#xa;- Active Users&#xa;- Server Performance&#xa;- Database Status&#xa;- API Response Times&#xa;- Error Logs&#xa;- Security Alerts" vertex="1">
+          <mxGeometry height="180" width="240" x="880" y="1820" as="geometry" />
+        </mxCell>
+        <mxCell id="edge23" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="monitoring" value="Monitor System">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="backDashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" value="Back to Dashboard" vertex="1">
+          <mxGeometry height="60" width="180" x="490" y="1820" as="geometry" />
+        </mxCell>
+        <mxCell id="edge24" edge="1" parent="1" source="apiBooking" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="backDashboard" value="Continue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge25" edge="1" parent="1" source="apiDestination" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="backDashboard" value="Continue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge26" edge="1" parent="1" source="apiCategory" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="backDashboard" value="Continue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="logout" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11" value="Logout&#xa;&#xa;- Clear Token&#xa;- Clear Session&#xa;- Redirect to Landing" vertex="1">
+          <mxGeometry height="90" width="140" x="880" y="1660" as="geometry" />
+        </mxCell>
+        <mxCell id="edge27" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="logout" value="Logout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1" value="END" vertex="1">
+          <mxGeometry height="60" width="120" x="520" y="1920" as="geometry" />
+        </mxCell>
+        <mxCell id="edge28" edge="1" parent="1" source="backDashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge29" edge="1" parent="1" source="logout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="LEGEND" vertex="1">
+          <mxGeometry height="30" width="120" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="legendStart" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="Start/End" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="legendPage" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="Page/View" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="legendMenu" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10" value="Menu/Feature" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="legendAPI" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="API Call" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="legendDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="Detail/Action" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="legendPermission" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10" value="Permission" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="legendError" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10" value="Logout/Alert" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="440" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

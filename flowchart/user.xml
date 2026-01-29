@@ -1,0 +1,208 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0" version="29.3.6">
+  <diagram name="User Flow - Jejakin" id="user-flow">
+    <mxGraphModel dx="1880" dy="1285" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1" value="START" vertex="1">
+          <mxGeometry height="60" width="120" x="520" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="landing" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" value="Landing Page&#xa;(index.tsx)" vertex="1">
+          <mxGeometry height="60" width="160" x="500" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="landing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="decision1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12" value="Sudah&#xa;Login?" vertex="1">
+          <mxGeometry height="80" width="120" x="520" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="landing" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="decision1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="register" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Register Page&#xa;(register.tsx)&#xa;&#xa;- Input: Nama, Email, Password&#xa;- Pilih Role: User/Partner/Admin" vertex="1">
+          <mxGeometry height="100" width="180" x="280" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="decision1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11" target="register" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="login" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Login Page&#xa;(login.tsx)&#xa;&#xa;- Input: Email, Password&#xa;- Pilih Role: User/Partner/Admin" vertex="1">
+          <mxGeometry height="100" width="180" x="700" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="decision1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11" target="login" value="Ya (ke Login)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="authSuccess" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Autentikasi Berhasil&#xa;Token disimpan di localStorage" vertex="1">
+          <mxGeometry height="60" width="180" x="490" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="register" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="authSuccess">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="login" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="authSuccess">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1" value="User Dashboard&#xa;(dashboard/index.tsx)&#xa;&#xa;- Statistik Booking&#xa;- Booking Terbaru&#xa;- Profil User" vertex="1">
+          <mxGeometry height="100" width="180" x="490" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="authSuccess" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="explore" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="Explore Destinasi&#xa;(dashboard/explore.tsx)&#xa;&#xa;- Search and Filter&#xa;- Browse by Category&#xa;- Filter by Province" vertex="1">
+          <mxGeometry height="100" width="180" x="200" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="explore" value="Explore">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bookings" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="My Bookings&#xa;(dashboard/bookings/index.tsx)&#xa;&#xa;- List All Bookings&#xa;- Filter by Status&#xa;- View Details&#xa;- Cancel Booking" vertex="1">
+          <mxGeometry height="110" width="180" x="420" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="bookings" value="Bookings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wishlist" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="Wishlist&#xa;(dashboard/wishlist.tsx)&#xa;&#xa;- View Saved Destinations&#xa;- Remove from Wishlist&#xa;- Quick Access to Details" vertex="1">
+          <mxGeometry height="100" width="180" x="640" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="edge10" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="wishlist" value="Wishlist">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="notifications" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="Notifications&#xa;(dashboard/notifications.tsx)&#xa;&#xa;- View All Notifications&#xa;- Mark as Read&#xa;- Notification Types:&#xa;  Booking Updates&#xa;  Payment Status" vertex="1">
+          <mxGeometry height="120" width="180" x="860" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="edge11" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="notifications" value="Notifications">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="destDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1" value="Destination Detail&#xa;(destinations/[slug].tsx)&#xa;&#xa;- View Images Gallery&#xa;- Read Description&#xa;- Check Facilities&#xa;- View Location&#xa;- Read Reviews&#xa;- Add to Wishlist" vertex="1">
+          <mxGeometry height="140" width="180" x="180" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="edge12" edge="1" parent="1" source="explore" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="destDetail" value="Pilih Destinasi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bookingForm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11" value="Booking Form&#xa;&#xa;Input:&#xa;- Tanggal Kunjungan&#xa;- Jumlah Orang&#xa;- Catatan (Optional)&#xa;&#xa;Kalkulasi:&#xa;- Total Price = Price x People" vertex="1">
+          <mxGeometry height="140" width="180" x="180" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="edge13" edge="1" parent="1" source="destDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="bookingForm" value="Book Now">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="createBooking" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Create Booking&#xa;(API: POST /api/bookings)&#xa;&#xa;- Generate Booking Code&#xa;- Status: Pending&#xa;- Payment Status: Unpaid&#xa;- Send Notification" vertex="1">
+          <mxGeometry height="120" width="180" x="180" y="1380" as="geometry" />
+        </mxCell>
+        <mxCell id="edge14" edge="1" parent="1" source="bookingForm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="createBooking" value="Submit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bookingDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1" value="Booking Detail&#xa;(dashboard/bookings/[id].tsx)&#xa;&#xa;- View Booking Info&#xa;- Booking Code&#xa;- Destination Details&#xa;- Status and Payment Status&#xa;- Total Price" vertex="1">
+          <mxGeometry height="140" width="180" x="420" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="edge15" edge="1" parent="1" source="createBooking" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="bookingDetail" value="Success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge16" edge="1" parent="1" source="bookings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="bookingDetail" value="View Detail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bookingActions" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12" value="Booking Actions" vertex="1">
+          <mxGeometry height="80" width="140" x="440" y="1380" as="geometry" />
+        </mxCell>
+        <mxCell id="edge17" edge="1" parent="1" source="bookingDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bookingActions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cancelBooking" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11" value="Cancel Booking&#xa;(API: DELETE /api/bookings/[id])&#xa;&#xa;- Update Status: Cancelled&#xa;- Send Notification&#xa;- Refund (if paid)" vertex="1">
+          <mxGeometry height="100" width="180" x="640" y="1380" as="geometry" />
+        </mxCell>
+        <mxCell id="edge18" edge="1" parent="1" source="bookingActions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="cancelBooking" value="Cancel&#xa;(if Pending)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="payment" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Payment Process&#xa;(API: POST /api/payments)&#xa;&#xa;- Process Payment&#xa;- Update Payment Status: Paid&#xa;- Send Confirmation" vertex="1">
+          <mxGeometry height="100" width="180" x="420" y="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="edge19" edge="1" parent="1" source="bookingActions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="payment" value="Pay">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="partnerConfirm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" value="Partner Confirms Booking&#xa;&#xa;- Status: Confirmed&#xa;- Notification Sent to User" vertex="1">
+          <mxGeometry height="80" width="180" x="640" y="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="edge20" edge="1" parent="1" source="payment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="partnerConfirm" value="Wait for&#xa;Confirmation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="visit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" value="Visit Destination&#xa;&#xa;- User mengunjungi destinasi&#xa;- Status: Completed" vertex="1">
+          <mxGeometry height="80" width="180" x="640" y="1660" as="geometry" />
+        </mxCell>
+        <mxCell id="edge21" edge="1" parent="1" source="partnerConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10" target="visit" value="Visit Date">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="review" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11" value="Write Review&#xa;(API: POST /api/destinations/[id]/reviews)&#xa;&#xa;Input:&#xa;- Rating (1-5)&#xa;- Comment&#xa;&#xa;- Update Destination Rating" vertex="1">
+          <mxGeometry height="140" width="180" x="640" y="1800" as="geometry" />
+        </mxCell>
+        <mxCell id="edge22" edge="1" parent="1" source="visit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="review" value="Optional:&#xa;Write Review">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wishlistAdd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Add to Wishlist&#xa;(API: POST /api/wishlists)&#xa;&#xa;- Save Destination&#xa;- Quick Access Later" vertex="1">
+          <mxGeometry height="100" width="180" x="860" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="edge23" edge="1" parent="1" source="destDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="wishlistAdd" value="Add to&#xa;Wishlist">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wishlistRemove" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11" value="Remove from Wishlist&#xa;(API: DELETE /api/wishlists)&#xa;&#xa;- Remove Saved Destination" vertex="1">
+          <mxGeometry height="90" width="180" x="860" y="1320" as="geometry" />
+        </mxCell>
+        <mxCell id="edge24" edge="1" parent="1" source="wishlist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="wishlistRemove" value="Remove">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="notifSystem" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1" value="Notification System&#xa;&#xa;Triggers:&#xa;- Booking Created&#xa;- Booking Confirmed&#xa;- Booking Cancelled&#xa;- Payment Success&#xa;- Review Added" vertex="1">
+          <mxGeometry height="140" width="180" x="860" y="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="edge25" edge="1" parent="1" source="createBooking" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="notifSystem" value="Auto Notify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge26" edge="1" parent="1" source="partnerConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="notifSystem" value="Auto Notify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="backDashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" value="Back to Dashboard" vertex="1">
+          <mxGeometry height="60" width="180" x="420" y="1980" as="geometry" />
+        </mxCell>
+        <mxCell id="edge27" edge="1" parent="1" source="review" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="backDashboard" value="Continue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge28" edge="1" parent="1" source="cancelBooking" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1" target="backDashboard" value="Continue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="logout" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11" value="Logout&#xa;&#xa;- Clear Token&#xa;- Redirect to Landing" vertex="1">
+          <mxGeometry height="80" width="140" x="860" y="1800" as="geometry" />
+        </mxCell>
+        <mxCell id="edge29" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="logout" value="Logout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1" value="END" vertex="1">
+          <mxGeometry height="60" width="120" x="450" y="2100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge30" edge="1" parent="1" source="backDashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge31" edge="1" parent="1" source="logout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="LEGEND" vertex="1">
+          <mxGeometry height="30" width="120" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="legendStart" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="Start/End" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="legendPage" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="Page/View" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="legendDecision" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10" value="Decision" vertex="1">
+          <mxGeometry height="50" width="80" x="50" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="legendAPI" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="API Call" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="legendForm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10" value="Form Input" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="legendAction" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="Action" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="legendError" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10" value="Error/Cancel" vertex="1">
+          <mxGeometry height="40" width="100" x="40" y="450" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
