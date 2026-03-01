@@ -1,22 +1,25 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth';
-import { generateSlug } from '@/lib/utils';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
+import { generateSlug } from "@/lib/utils";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   // GET - List all destinations
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     try {
       const {
-        page = '1',
-        limit = '20',
-        search = '',
-        category = '',
-        province = '',
-        slug = '',
-        status = 'active',
-        sortBy = 'createdAt',
-        order = 'desc',
+        page = "1",
+        limit = "20",
+        search = "",
+        category = "",
+        province = "",
+        slug = "",
+        status = "active",
+        sortBy = "createdAt",
+        order = "desc",
       } = req.query;
 
       const pageNum = parseInt(page as string);
@@ -32,8 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (slug) {
         where.slug = slug as string;
       } else {
-        // Only filter by status if not searching by slug
-        where.status = status as string;
+        // Only filter by status if not searching by slug and status is not 'all'
+        if (status && status !== "all") {
+          where.status = status as string;
+        }
       }
 
       if (search) {
@@ -93,23 +98,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
     } catch (error) {
-      console.error('Get destinations error:', error);
+      console.error("Get destinations error:", error);
       return res.status(500).json({
         success: false,
-        message: 'Internal server error',
+        message: "Internal server error",
       });
     }
   }
 
   // POST - Create new destination (Partner/Admin only)
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     try {
       const authUser = requireAuth(req);
 
-      if (authUser.role !== 'partner' && authUser.role !== 'admin') {
+      if (authUser.role !== "partner" && authUser.role !== "admin") {
         return res.status(403).json({
           success: false,
-          message: 'Forbidden: Partner or Admin access required',
+          message: "Forbidden: Partner or Admin access required",
         });
       }
 
@@ -128,10 +133,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } = req.body;
 
       // Validation
-      if (!name || !description || !location || !province || !city || !category) {
+      if (
+        !name ||
+        !description ||
+        !location ||
+        !province ||
+        !city ||
+        !category
+      ) {
         return res.status(400).json({
           success: false,
-          message: 'Required fields are missing',
+          message: "Required fields are missing",
         });
       }
 
@@ -146,7 +158,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (existingDestination) {
         return res.status(409).json({
           success: false,
-          message: 'Destination with this name already exists',
+          message: "Destination with this name already exists",
         });
       }
 
@@ -180,24 +192,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(201).json({
         success: true,
-        message: 'Destination created successfully',
+        message: "Destination created successfully",
         data: destination,
       });
     } catch (error: any) {
-      if (error.message === 'Unauthorized') {
+      if (error.message === "Unauthorized") {
         return res.status(401).json({
           success: false,
-          message: 'Unauthorized',
+          message: "Unauthorized",
         });
       }
 
-      console.error('Create destination error:', error);
+      console.error("Create destination error:", error);
       return res.status(500).json({
         success: false,
-        message: 'Internal server error',
+        message: "Internal server error",
       });
     }
   }
 
-  return res.status(405).json({ success: false, message: 'Method not allowed' });
+  return res
+    .status(405)
+    .json({ success: false, message: "Method not allowed" });
 }

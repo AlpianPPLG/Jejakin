@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { withAuthRequired } from '@/components/hoc/withAuth';
-import { useAuth } from '@/contexts/AuthContext';
-import DashboardLayout from '@/components/layouts/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/contexts/ToastContext';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { withAuthRequired } from "@/components/hoc/withAuth";
+import { useAuth } from "@/contexts/AuthContext";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/contexts/ToastContext";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -25,9 +25,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface Category {
   id: string;
@@ -49,19 +49,21 @@ function AdminCategoriesPage() {
   const [createDialog, setCreateDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
   const [submitting, setSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    icon: '',
+    name: "",
+    description: "",
+    icon: "",
   });
 
   useEffect(() => {
-    if (user && user.role !== 'admin') {
-      router.push('/dashboard');
+    if (user && user.role !== "admin") {
+      router.push("/dashboard");
       return;
     }
     fetchCategories();
@@ -70,23 +72,23 @@ function AdminCategoriesPage() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
-      const response = await fetch('/api/categories', {
+      const response = await fetch("/api/categories", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) throw new Error('Failed to fetch categories');
+      if (!response.ok) throw new Error("Failed to fetch categories");
       const data = await response.json();
       setCategories(data.data || []);
     } catch (error) {
-      showError('Gagal memuat categories');
+      showError("Gagal memuat categories");
     } finally {
       setLoading(false);
     }
@@ -94,36 +96,36 @@ function AdminCategoriesPage() {
 
   const handleCreate = async () => {
     if (!formData.name.trim()) {
-      showError('Nama kategori harus diisi');
+      showError("Nama kategori harus diisi");
       return;
     }
 
     try {
       setSubmitting(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
-      const response = await fetch('/api/categories', {
-        method: 'POST',
+      const response = await fetch("/api/categories", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error('Failed to create category');
+      if (!response.ok) throw new Error("Failed to create category");
 
-      showSuccess('Kategori berhasil dibuat');
+      showSuccess("Kategori berhasil dibuat");
       setCreateDialog(false);
-      setFormData({ name: '', description: '', icon: '' });
+      setFormData({ name: "", description: "", icon: "" });
       await fetchCategories();
     } catch (error) {
-      showError('Gagal membuat kategori');
+      showError("Gagal membuat kategori");
     } finally {
       setSubmitting(false);
     }
@@ -132,24 +134,24 @@ function AdminCategoriesPage() {
   const handleEdit = async () => {
     if (!selectedCategory) return;
     if (!formData.name.trim()) {
-      showError('Nama kategori harus diisi');
+      showError("Nama kategori harus diisi");
       return;
     }
 
     try {
       setSubmitting(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
-      const response = await fetch('/api/categories', {
-        method: 'PUT',
+      const response = await fetch("/api/categories", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id: selectedCategory.id,
@@ -157,15 +159,15 @@ function AdminCategoriesPage() {
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to update category');
+      if (!response.ok) throw new Error("Failed to update category");
 
-      showSuccess('Kategori berhasil diupdate');
+      showSuccess("Kategori berhasil diupdate");
       setEditDialog(false);
       setSelectedCategory(null);
-      setFormData({ name: '', description: '', icon: '' });
+      setFormData({ name: "", description: "", icon: "" });
       await fetchCategories();
     } catch (error) {
-      showError('Gagal update kategori');
+      showError("Gagal update kategori");
     } finally {
       setSubmitting(false);
     }
@@ -176,28 +178,36 @@ function AdminCategoriesPage() {
 
     try {
       setSubmitting(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
-      const response = await fetch(`/api/categories?id=${selectedCategory.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      const response = await fetch(
+        `/api/categories?id=${selectedCategory.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
-      if (!response.ok) throw new Error('Failed to delete category');
+      const data = await response.json();
 
-      showSuccess('Kategori berhasil dihapus');
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Failed to delete category");
+      }
+
+      showSuccess("Kategori berhasil dihapus");
       setDeleteDialog(false);
       setSelectedCategory(null);
       await fetchCategories();
-    } catch (error) {
-      showError('Gagal menghapus kategori');
+    } catch (error: any) {
+      console.error("Delete category error:", error);
+      showError(error.message || "Gagal menghapus kategori");
     } finally {
       setSubmitting(false);
     }
@@ -205,18 +215,18 @@ function AdminCategoriesPage() {
 
   const handleToggleActive = async (category: Category) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
-      const response = await fetch('/api/categories', {
-        method: 'PUT',
+      const response = await fetch("/api/categories", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id: category.id,
@@ -224,12 +234,14 @@ function AdminCategoriesPage() {
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to toggle category status');
+      if (!response.ok) throw new Error("Failed to toggle category status");
 
-      showSuccess(`Kategori ${!category.isActive ? 'diaktifkan' : 'dinonaktifkan'}`);
+      showSuccess(
+        `Kategori ${!category.isActive ? "diaktifkan" : "dinonaktifkan"}`,
+      );
       await fetchCategories();
     } catch (error) {
-      showError('Gagal mengubah status kategori');
+      showError("Gagal mengubah status kategori");
     }
   };
 
@@ -237,17 +249,17 @@ function AdminCategoriesPage() {
     setSelectedCategory(category);
     setFormData({
       name: category.name,
-      description: category.description || '',
-      icon: category.icon || '',
+      description: category.description || "",
+      icon: category.icon || "",
     });
     setEditDialog(true);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   };
 
@@ -262,7 +274,9 @@ function AdminCategoriesPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Manage Categories</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Manage Categories
+              </h1>
               <p className="text-gray-600 mt-1">Kelola kategori destinasi</p>
             </div>
             <Button onClick={() => setCreateDialog(true)}>
@@ -281,7 +295,7 @@ function AdminCategoriesPage() {
             <Card>
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold text-green-600">
-                  {categories.filter(c => c.isActive).length}
+                  {categories.filter((c) => c.isActive).length}
                 </div>
                 <div className="text-xs text-gray-500">Active</div>
               </CardContent>
@@ -289,7 +303,7 @@ function AdminCategoriesPage() {
             <Card>
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold text-gray-600">
-                  {categories.filter(c => !c.isActive).length}
+                  {categories.filter((c) => !c.isActive).length}
                 </div>
                 <div className="text-xs text-gray-500">Inactive</div>
               </CardContent>
@@ -311,7 +325,10 @@ function AdminCategoriesPage() {
               ) : categories.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-500">No categories found</p>
-                  <Button onClick={() => setCreateDialog(true)} className="mt-4">
+                  <Button
+                    onClick={() => setCreateDialog(true)}
+                    className="mt-4"
+                  >
                     Create First Category
                   </Button>
                 </div>
@@ -331,9 +348,14 @@ function AdminCategoriesPage() {
                     </TableHeader>
                     <TableBody>
                       {categories.map((category) => (
-                        <TableRow key={category.id} className="hover:bg-gray-50">
+                        <TableRow
+                          key={category.id}
+                          className="hover:bg-gray-50"
+                        >
                           <TableCell>
-                            <div className="text-2xl">{category.icon || '📁'}</div>
+                            <div className="text-2xl">
+                              {category.icon || "📁"}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="font-medium">{category.name}</div>
@@ -345,12 +367,16 @@ function AdminCategoriesPage() {
                           </TableCell>
                           <TableCell>
                             <div className="text-sm text-gray-600 max-w-md truncate">
-                              {category.description || '-'}
+                              {category.description || "-"}
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={category.isActive ? 'default' : 'secondary'}>
-                              {category.isActive ? 'Active' : 'Inactive'}
+                            <Badge
+                              variant={
+                                category.isActive ? "default" : "secondary"
+                              }
+                            >
+                              {category.isActive ? "Active" : "Inactive"}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-sm text-gray-500">
@@ -363,7 +389,7 @@ function AdminCategoriesPage() {
                                 size="sm"
                                 onClick={() => handleToggleActive(category)}
                               >
-                                {category.isActive ? 'Deactivate' : 'Activate'}
+                                {category.isActive ? "Deactivate" : "Activate"}
                               </Button>
                               <Button
                                 variant="ghost"
@@ -411,7 +437,9 @@ function AdminCategoriesPage() {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="e.g., Pantai, Gunung"
               />
             </div>
@@ -420,7 +448,9 @@ function AdminCategoriesPage() {
               <Input
                 id="icon"
                 value={formData.icon}
-                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, icon: e.target.value })
+                }
                 placeholder="e.g., 🏖️, ⛰️"
               />
             </div>
@@ -429,7 +459,9 @@ function AdminCategoriesPage() {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 placeholder="Category description..."
                 rows={3}
               />
@@ -440,14 +472,14 @@ function AdminCategoriesPage() {
               variant="outline"
               onClick={() => {
                 setCreateDialog(false);
-                setFormData({ name: '', description: '', icon: '' });
+                setFormData({ name: "", description: "", icon: "" });
               }}
               disabled={submitting}
             >
               Cancel
             </Button>
             <Button onClick={handleCreate} disabled={submitting}>
-              {submitting ? 'Creating...' : 'Create'}
+              {submitting ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -458,9 +490,7 @@ function AdminCategoriesPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Category</DialogTitle>
-            <DialogDescription>
-              Update category information
-            </DialogDescription>
+            <DialogDescription>Update category information</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -468,7 +498,9 @@ function AdminCategoriesPage() {
               <Input
                 id="edit-name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="e.g., Pantai, Gunung"
               />
             </div>
@@ -477,7 +509,9 @@ function AdminCategoriesPage() {
               <Input
                 id="edit-icon"
                 value={formData.icon}
-                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, icon: e.target.value })
+                }
                 placeholder="e.g., 🏖️, ⛰️"
               />
             </div>
@@ -486,7 +520,9 @@ function AdminCategoriesPage() {
               <Textarea
                 id="edit-description"
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 placeholder="Category description..."
                 rows={3}
               />
@@ -498,14 +534,14 @@ function AdminCategoriesPage() {
               onClick={() => {
                 setEditDialog(false);
                 setSelectedCategory(null);
-                setFormData({ name: '', description: '', icon: '' });
+                setFormData({ name: "", description: "", icon: "" });
               }}
               disabled={submitting}
             >
               Cancel
             </Button>
             <Button onClick={handleEdit} disabled={submitting}>
-              {submitting ? 'Updating...' : 'Update'}
+              {submitting ? "Updating..." : "Update"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -517,17 +553,24 @@ function AdminCategoriesPage() {
           <DialogHeader>
             <DialogTitle>Delete Category</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this category? This action cannot be undone.
+              Are you sure you want to delete this category? This action cannot
+              be undone.
             </DialogDescription>
           </DialogHeader>
           {selectedCategory && (
             <div className="py-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center gap-3">
-                  <div className="text-3xl">{selectedCategory.icon || '📁'}</div>
+                  <div className="text-3xl">
+                    {selectedCategory.icon || "📁"}
+                  </div>
                   <div>
-                    <p className="font-medium text-gray-900">{selectedCategory.name}</p>
-                    <p className="text-sm text-gray-600">{selectedCategory.description}</p>
+                    <p className="font-medium text-gray-900">
+                      {selectedCategory.name}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {selectedCategory.description}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -549,7 +592,7 @@ function AdminCategoriesPage() {
               onClick={handleDelete}
               disabled={submitting}
             >
-              {submitting ? 'Deleting...' : 'Delete'}
+              {submitting ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

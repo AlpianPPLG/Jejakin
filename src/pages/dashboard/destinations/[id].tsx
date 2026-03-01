@@ -1,16 +1,22 @@
-import { useState, useEffect, FormEvent } from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { withAuthRequired } from '@/components/hoc/withAuth';
-import DashboardLayout from '@/components/layouts/DashboardLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/contexts/ToastContext';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState, useEffect, FormEvent } from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { withAuthRequired } from "@/components/hoc/withAuth";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/contexts/ToastContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DestinationForm {
   name: string;
@@ -32,20 +38,20 @@ function EditDestinationPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<DestinationForm>({
-    name: '',
-    location: '',
-    province: '',
-    city: '',
-    description: '',
+    name: "",
+    location: "",
+    province: "",
+    city: "",
+    description: "",
     price: 0,
-    category: 'BEACH',
-    images: [''],
-    facilities: [''],
-    status: 'active',
+    category: "BEACH",
+    images: [""],
+    facilities: [""],
+    status: "active",
   });
 
   useEffect(() => {
-    if (id && id !== 'create') {
+    if (id && id !== "create") {
       fetchDestination();
     } else {
       setLoading(false);
@@ -54,19 +60,19 @@ function EditDestinationPage() {
 
   const fetchDestination = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
       const response = await fetch(`/api/destinations/${id}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) throw new Error('Failed to fetch');
+      if (!response.ok) throw new Error("Failed to fetch");
       const data = await response.json();
       setFormData({
         name: data.data.name,
@@ -76,13 +82,16 @@ function EditDestinationPage() {
         description: data.data.description,
         price: data.data.price,
         category: data.data.category,
-        images: data.data.images.length > 0 ? JSON.parse(data.data.images) : [''],
-        facilities: data.data.facilities ? JSON.parse(data.data.facilities) : [''],
+        images:
+          data.data.images.length > 0 ? JSON.parse(data.data.images) : [""],
+        facilities: data.data.facilities
+          ? JSON.parse(data.data.facilities)
+          : [""],
         status: data.data.status,
       });
     } catch (error) {
-      showError('Gagal memuat destinasi');
-      router.push('/dashboard/destinations');
+      showError("Gagal memuat destinasi");
+      router.push("/dashboard/destinations");
     } finally {
       setLoading(false);
     }
@@ -93,36 +102,41 @@ function EditDestinationPage() {
     setSaving(true);
 
     try {
-      const url = id === 'create' ? '/api/destinations' : `/api/destinations/${id}`;
-      const method = id === 'create' ? 'POST' : 'PUT';
+      const url =
+        id === "create" ? "/api/destinations" : `/api/destinations/${id}`;
+      const method = id === "create" ? "POST" : "PUT";
 
       // Get token from localStorage
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showError('Session expired. Please login again.');
-        router.push('/login');
+        showError("Session expired. Please login again.");
+        router.push("/login");
         return;
       }
 
       const response = await fetch(url, {
         method,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formData,
-          images: formData.images.filter(img => img.trim() !== ''),
-          facilities: formData.facilities.filter(f => f.trim() !== ''),
+          images: formData.images.filter((img) => img.trim() !== ""),
+          facilities: formData.facilities.filter((f) => f.trim() !== ""),
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to save');
+      if (!response.ok) throw new Error("Failed to save");
 
-      showSuccess(id === 'create' ? 'Destinasi berhasil ditambahkan' : 'Destinasi berhasil diperbarui');
-      router.push('/dashboard/destinations');
+      showSuccess(
+        id === "create"
+          ? "Destinasi berhasil ditambahkan"
+          : "Destinasi berhasil diperbarui",
+      );
+      router.push("/dashboard/destinations");
     } catch (error) {
-      showError('Gagal menyimpan destinasi');
+      showError("Gagal menyimpan destinasi");
     } finally {
       setSaving(false);
     }
@@ -135,12 +149,15 @@ function EditDestinationPage() {
   };
 
   const addImageField = () => {
-    setFormData({ ...formData, images: [...formData.images, ''] });
+    setFormData({ ...formData, images: [...formData.images, ""] });
   };
 
   const removeImageField = (index: number) => {
     const newImages = formData.images.filter((_, i) => i !== index);
-    setFormData({ ...formData, images: newImages.length > 0 ? newImages : [''] });
+    setFormData({
+      ...formData,
+      images: newImages.length > 0 ? newImages : [""],
+    });
   };
 
   const handleFacilityChange = (index: number, value: string) => {
@@ -150,12 +167,15 @@ function EditDestinationPage() {
   };
 
   const addFacilityField = () => {
-    setFormData({ ...formData, facilities: [...formData.facilities, ''] });
+    setFormData({ ...formData, facilities: [...formData.facilities, ""] });
   };
 
   const removeFacilityField = (index: number) => {
     const newFacilities = formData.facilities.filter((_, i) => i !== index);
-    setFormData({ ...formData, facilities: newFacilities.length > 0 ? newFacilities : [''] });
+    setFormData({
+      ...formData,
+      facilities: newFacilities.length > 0 ? newFacilities : [""],
+    });
   };
 
   if (loading) {
@@ -178,7 +198,7 @@ function EditDestinationPage() {
   return (
     <>
       <Head>
-        <title>{id === 'create' ? 'Tambah' : 'Edit'} Destinasi - Jejakin</title>
+        <title>{id === "create" ? "Tambah" : "Edit"} Destinasi - Jejakin</title>
       </Head>
 
       <DashboardLayout>
@@ -187,13 +207,13 @@ function EditDestinationPage() {
           <div className="mb-6">
             <Button
               variant="ghost"
-              onClick={() => router.push('/dashboard/destinations')}
+              onClick={() => router.push("/dashboard/destinations")}
               className="mb-4"
             >
               ← Kembali
             </Button>
             <h1 className="text-3xl font-bold text-gray-900">
-              {id === 'create' ? 'Tambah Destinasi Baru' : 'Edit Destinasi'}
+              {id === "create" ? "Tambah Destinasi Baru" : "Edit Destinasi"}
             </h1>
           </div>
 
@@ -210,7 +230,9 @@ function EditDestinationPage() {
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     placeholder="Contoh: Pantai Kuta"
                     required
                   />
@@ -222,7 +244,9 @@ function EditDestinationPage() {
                   <Input
                     id="location"
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     placeholder="Contoh: Jl. Pantai Kuta No. 1"
                     required
                   />
@@ -235,7 +259,9 @@ function EditDestinationPage() {
                     <Input
                       id="province"
                       value={formData.province}
-                      onChange={(e) => setFormData({ ...formData, province: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, province: e.target.value })
+                      }
                       placeholder="Contoh: Bali"
                       required
                     />
@@ -246,7 +272,9 @@ function EditDestinationPage() {
                     <Input
                       id="city"
                       value={formData.city}
-                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, city: e.target.value })
+                      }
                       placeholder="Contoh: Badung"
                       required
                     />
@@ -259,7 +287,9 @@ function EditDestinationPage() {
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                     placeholder="Deskripsikan destinasi ini..."
                     rows={5}
                     required
@@ -274,7 +304,12 @@ function EditDestinationPage() {
                       id="price"
                       type="number"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          price: Number(e.target.value),
+                        })
+                      }
                       placeholder="500000"
                       min="0"
                       required
@@ -285,7 +320,9 @@ function EditDestinationPage() {
                     <Label htmlFor="category">Kategori *</Label>
                     <Select
                       value={formData.category}
-                      onValueChange={(value) => setFormData({ ...formData, category: value })}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, category: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -294,8 +331,6 @@ function EditDestinationPage() {
                         <SelectItem value="BEACH">Pantai</SelectItem>
                         <SelectItem value="MOUNTAIN">Gunung</SelectItem>
                         <SelectItem value="CULTURAL">Budaya</SelectItem>
-                        <SelectItem value="ADVENTURE">Petualangan</SelectItem>
-                        <SelectItem value="CULINARY">Kuliner</SelectItem>
                         <SelectItem value="NATURE">Alam</SelectItem>
                       </SelectContent>
                     </Select>
@@ -309,7 +344,9 @@ function EditDestinationPage() {
                     <div key={index} className="flex gap-2">
                       <Input
                         value={image}
-                        onChange={(e) => handleImageChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleImageChange(index, e.target.value)
+                        }
                         placeholder="https://example.com/image.jpg"
                       />
                       {formData.images.length > 1 && (
@@ -340,7 +377,9 @@ function EditDestinationPage() {
                     <div key={index} className="flex gap-2">
                       <Input
                         value={facility}
-                        onChange={(e) => handleFacilityChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleFacilityChange(index, e.target.value)
+                        }
                         placeholder="Contoh: Parkir, Toilet, Mushola"
                       />
                       {formData.facilities.length > 1 && (
@@ -369,8 +408,13 @@ function EditDestinationPage() {
                   <input
                     type="checkbox"
                     id="status"
-                    checked={formData.status === 'active'}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.checked ? 'active' : 'inactive' })}
+                    checked={formData.status === "active"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        status: e.target.checked ? "active" : "inactive",
+                      })
+                    }
                     className="w-4 h-4"
                   />
                   <Label htmlFor="status" className="cursor-pointer">
@@ -381,12 +425,12 @@ function EditDestinationPage() {
                 {/* Actions */}
                 <div className="flex gap-3 pt-4">
                   <Button type="submit" disabled={saving}>
-                    {saving ? 'Menyimpan...' : 'Simpan'}
+                    {saving ? "Menyimpan..." : "Simpan"}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => router.push('/dashboard/destinations')}
+                    onClick={() => router.push("/dashboard/destinations")}
                   >
                     Batal
                   </Button>

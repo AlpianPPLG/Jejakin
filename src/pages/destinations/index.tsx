@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
-import GuestLayout from '@/components/layouts/GuestLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import Link from "next/link";
+import GuestLayout from "@/components/layouts/GuestLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Destination {
   id: string;
@@ -29,73 +35,80 @@ interface Destination {
 export default function DestinationsPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [provinceFilter, setProvinceFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('createdAt');
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [provinceFilter, setProvinceFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("createdAt");
 
   useEffect(() => {
     fetchDestinations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryFilter, provinceFilter, sortBy]);
 
   const fetchDestinations = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (categoryFilter && categoryFilter !== 'all') params.append('category', categoryFilter);
-      if (provinceFilter && provinceFilter !== 'all') params.append('province', provinceFilter);
-      params.append('sortBy', sortBy);
-      params.append('limit', '50');
+      if (categoryFilter && categoryFilter !== "all")
+        params.append("category", categoryFilter);
+      if (provinceFilter && provinceFilter !== "all")
+        params.append("province", provinceFilter);
+      params.append("sortBy", sortBy);
+      params.append("limit", "50");
 
       const response = await fetch(`/api/destinations?${params.toString()}`, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      
-      if (!response.ok) throw new Error('Failed to fetch destinations');
+
+      if (!response.ok) throw new Error("Failed to fetch destinations");
       const data = await response.json();
       setDestinations(data.data || []);
     } catch (error) {
-      console.error('Failed to fetch destinations:', error);
+      console.error("Failed to fetch destinations:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredDestinations = destinations.filter((dest) =>
-    dest.name.toLowerCase().includes(search.toLowerCase()) ||
-    dest.location.toLowerCase().includes(search.toLowerCase()) ||
-    dest.description.toLowerCase().includes(search.toLowerCase())
+  const filteredDestinations = destinations.filter(
+    (dest) =>
+      dest.name.toLowerCase().includes(search.toLowerCase()) ||
+      dest.location.toLowerCase().includes(search.toLowerCase()) ||
+      dest.description.toLowerCase().includes(search.toLowerCase()),
   );
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
       minimumFractionDigits: 0,
     }).format(amount);
   };
 
   const getCategoryLabel = (category: string) => {
     const labels: Record<string, string> = {
-      'BEACH': 'Pantai',
-      'MOUNTAIN': 'Gunung',
-      'CULTURAL': 'Budaya',
-      'ADVENTURE': 'Petualangan',
-      'CULINARY': 'Kuliner',
-      'NATURE': 'Alam',
+      BEACH: "Pantai",
+      MOUNTAIN: "Gunung",
+      CULTURAL: "Budaya",
+      NATURE: "Alam",
     };
     return labels[category] || category;
   };
 
-  const uniqueProvinces = Array.from(new Set(destinations.map(d => d.province))).sort();
+  const uniqueProvinces = Array.from(
+    new Set(destinations.map((d) => d.province)),
+  ).sort();
 
   return (
     <>
       <Head>
         <title>Destinasi Wisata - Jejakin</title>
-        <meta name="description" content="Temukan destinasi wisata terbaik di Indonesia" />
+        <meta
+          name="description"
+          content="Temukan destinasi wisata terbaik di Indonesia"
+        />
       </Head>
 
       <GuestLayout>
@@ -106,7 +119,8 @@ export default function DestinationsPage() {
               Destinasi Wisata
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Jelajahi keindahan Indonesia dengan berbagai destinasi wisata pilihan
+              Jelajahi keindahan Indonesia dengan berbagai destinasi wisata
+              pilihan
             </p>
           </div>
 
@@ -119,7 +133,10 @@ export default function DestinationsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <Select
+                  value={categoryFilter}
+                  onValueChange={setCategoryFilter}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Semua Kategori" />
                   </SelectTrigger>
@@ -128,12 +145,13 @@ export default function DestinationsPage() {
                     <SelectItem value="BEACH">Pantai</SelectItem>
                     <SelectItem value="MOUNTAIN">Gunung</SelectItem>
                     <SelectItem value="CULTURAL">Budaya</SelectItem>
-                    <SelectItem value="ADVENTURE">Petualangan</SelectItem>
-                    <SelectItem value="CULINARY">Kuliner</SelectItem>
                     <SelectItem value="NATURE">Alam</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={provinceFilter} onValueChange={setProvinceFilter}>
+                <Select
+                  value={provinceFilter}
+                  onValueChange={setProvinceFilter}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Semua Provinsi" />
                   </SelectTrigger>
@@ -164,7 +182,8 @@ export default function DestinationsPage() {
           {/* Results Count */}
           <div className="mb-6">
             <p className="text-gray-600">
-              Menampilkan {filteredDestinations.length} dari {destinations.length} destinasi
+              Menampilkan {filteredDestinations.length} dari{" "}
+              {destinations.length} destinasi
             </p>
           </div>
 
@@ -189,17 +208,16 @@ export default function DestinationsPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <p className="text-gray-500 mb-4">
-                  {search || categoryFilter || provinceFilter 
-                    ? 'Tidak ada destinasi yang sesuai dengan filter' 
-                    : 'Belum ada destinasi tersedia'
-                  }
+                  {search || categoryFilter || provinceFilter
+                    ? "Tidak ada destinasi yang sesuai dengan filter"
+                    : "Belum ada destinasi tersedia"}
                 </p>
                 {(search || categoryFilter || provinceFilter) && (
                   <button
                     onClick={() => {
-                      setSearch('');
-                      setCategoryFilter('');
-                      setProvinceFilter('');
+                      setSearch("");
+                      setCategoryFilter("");
+                      setProvinceFilter("");
                     }}
                     className="text-blue-600 hover:text-blue-700 font-medium"
                   >
@@ -211,12 +229,18 @@ export default function DestinationsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredDestinations.map((destination) => {
-                const images = destination.images ? JSON.parse(destination.images) : [];
+                const images = destination.images
+                  ? JSON.parse(destination.images)
+                  : [];
                 return (
-                  <Card key={destination.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <Card
+                    key={destination.id}
+                    className="overflow-hidden hover:shadow-lg transition-shadow"
+                  >
                     {/* Image */}
                     <div className="h-48 bg-gray-200 relative">
                       {images[0] ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={images[0]}
                           alt={destination.name}
@@ -233,7 +257,9 @@ export default function DestinationsPage() {
                     </div>
 
                     <CardHeader>
-                      <CardTitle className="line-clamp-1">{destination.name}</CardTitle>
+                      <CardTitle className="line-clamp-1">
+                        {destination.name}
+                      </CardTitle>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <span>📍 {destination.location}</span>
                       </div>
@@ -254,7 +280,9 @@ export default function DestinationsPage() {
                         <div className="text-right">
                           <div className="flex items-center gap-1">
                             <span className="text-yellow-500">⭐</span>
-                            <span className="font-semibold">{destination.rating.toFixed(1)}</span>
+                            <span className="font-semibold">
+                              {destination.rating.toFixed(1)}
+                            </span>
                           </div>
                           <p className="text-xs text-gray-500">
                             {destination._count.reviews} reviews
@@ -263,7 +291,10 @@ export default function DestinationsPage() {
                       </div>
 
                       <div className="flex gap-2">
-                        <Link href={`/destinations/${destination.slug}`} className="flex-1">
+                        <Link
+                          href={`/destinations/${destination.slug}`}
+                          className="flex-1"
+                        >
                           <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
                             Lihat Detail
                           </button>

@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import DashboardLayout from '@/components/layouts/DashboardLayout';
-import { useAuth } from '@/contexts/AuthContext';
-import { apiClient } from '@/lib/api-client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
+import { apiClient } from "@/lib/api-client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -12,14 +14,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -27,10 +29,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Trash2, Search, Filter } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Star, Trash2, Search, Filter } from "lucide-react";
 
 interface Review {
   id: string;
@@ -65,6 +67,7 @@ interface Pagination {
 export default function AdminReviews() {
   const router = useRouter();
   const { user } = useAuth();
+  const { showError, showSuccess } = useToast();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<Pagination>({
@@ -77,8 +80,8 @@ export default function AdminReviews() {
   });
 
   // Filters
-  const [search, setSearch] = useState('');
-  const [ratingFilter, setRatingFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [ratingFilter, setRatingFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
 
   // Delete dialog
@@ -86,21 +89,7 @@ export default function AdminReviews() {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    if (!user) {
-      router.push('/login');
-      return;
-    }
-
-    if (user.role !== 'admin' && user.role !== 'partner') {
-      router.push('/dashboard');
-      return;
-    }
-
-    fetchReviews();
-  }, [user, pagination.page, ratingFilter]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -108,21 +97,36 @@ export default function AdminReviews() {
         limit: pagination.limit.toString(),
       });
 
-      if (search) params.append('search', search);
-      if (ratingFilter && ratingFilter !== 'all') params.append('rating', ratingFilter);
+      if (search) params.append("search", search);
+      if (ratingFilter && ratingFilter !== "all")
+        params.append("rating", ratingFilter);
 
       const response = await apiClient(`/api/admin/reviews?${params}`);
-      
+
       if (response.success) {
         setReviews(response.data.reviews);
         setPagination(response.data.pagination);
       }
     } catch (error: any) {
-      console.error('Error fetching reviews:', error);
+      console.error("Error fetching reviews:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, search, ratingFilter]);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    if (user.role !== "admin" && user.role !== "partner") {
+      router.push("/dashboard");
+      return;
+    }
+
+    fetchReviews();
+  }, [user, pagination.page, ratingFilter, fetchReviews, router]);
 
   const handleSearch = () => {
     setPagination({ ...pagination, page: 1 });
@@ -134,18 +138,24 @@ export default function AdminReviews() {
 
     try {
       setDeleting(true);
-      const response = await apiClient(`/api/admin/reviews?id=${selectedReview.id}`, {
-        method: 'DELETE',
-      });
+      const response = await apiClient(
+        `/api/admin/reviews?id=${selectedReview.id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (response.success) {
+        showSuccess("Review berhasil dihapus");
         setDeleteDialog(false);
         setSelectedReview(null);
         fetchReviews();
+      } else {
+        throw new Error(response.message || "Failed to delete review");
       }
     } catch (error: any) {
-      console.error('Error deleting review:', error);
-      alert(error.message || 'Gagal menghapus review');
+      console.error("Error deleting review:", error);
+      showError(error.message || "Gagal menghapus review");
     } finally {
       setDeleting(false);
     }
@@ -158,7 +168,9 @@ export default function AdminReviews() {
           <Star
             key={star}
             className={`w-4 h-4 ${
-              star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+              star <= rating
+                ? "fill-yellow-400 text-yellow-400"
+                : "text-gray-300"
             }`}
           />
         ))}
@@ -167,22 +179,22 @@ export default function AdminReviews() {
   };
 
   const getDestinationImage = (images: any) => {
-    if (!images) return '/placeholder-destination.jpg';
-    if (typeof images === 'string') {
+    if (!images) return "/placeholder-destination.jpg";
+    if (typeof images === "string") {
       try {
         const parsed = JSON.parse(images);
-        return parsed[0] || '/placeholder-destination.jpg';
+        return parsed[0] || "/placeholder-destination.jpg";
       } catch {
         return images;
       }
     }
     if (Array.isArray(images)) {
-      return images[0] || '/placeholder-destination.jpg';
+      return images[0] || "/placeholder-destination.jpg";
     }
-    return '/placeholder-destination.jpg';
+    return "/placeholder-destination.jpg";
   };
 
-  if (!user || (user.role !== 'admin' && user.role !== 'partner')) {
+  if (!user || (user.role !== "admin" && user.role !== "partner")) {
     return null;
   }
 
@@ -207,13 +219,11 @@ export default function AdminReviews() {
                   placeholder="Cari review, user, atau destinasi..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                   className="pl-10"
                 />
               </div>
-              <Button onClick={handleSearch}>
-                Cari
-              </Button>
+              <Button onClick={handleSearch}>Cari</Button>
             </div>
             <Button
               variant="outline"
@@ -278,10 +288,13 @@ export default function AdminReviews() {
                     <TableRow key={review.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <img
+                          <Image
                             src={getDestinationImage(review.destination.images)}
                             alt={review.destination.name}
+                            width={48}
+                            height={48}
                             className="w-12 h-12 rounded object-cover"
+                            unoptimized
                           />
                           <div>
                             <p className="font-medium text-gray-900">
@@ -296,10 +309,13 @@ export default function AdminReviews() {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           {review.user.avatar ? (
-                            <img
+                            <Image
                               src={review.user.avatar}
                               alt={review.user.name}
+                              width={32}
+                              height={32}
                               className="w-8 h-8 rounded-full"
+                              unoptimized
                             />
                           ) : (
                             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
@@ -316,9 +332,7 @@ export default function AdminReviews() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        {renderStars(review.rating)}
-                      </TableCell>
+                      <TableCell>{renderStars(review.rating)}</TableCell>
                       <TableCell>
                         <p className="text-sm text-gray-600 line-clamp-2 max-w-md">
                           {review.comment}
@@ -326,11 +340,14 @@ export default function AdminReviews() {
                       </TableCell>
                       <TableCell>
                         <p className="text-sm text-gray-600">
-                          {new Date(review.createdAt).toLocaleDateString('id-ID', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                          })}
+                          {new Date(review.createdAt).toLocaleDateString(
+                            "id-ID",
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </TableCell>
                       <TableCell className="text-right">
@@ -360,7 +377,12 @@ export default function AdminReviews() {
                     variant="outline"
                     size="sm"
                     disabled={!pagination.hasPrev}
-                    onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+                    onClick={() =>
+                      setPagination({
+                        ...pagination,
+                        page: pagination.page - 1,
+                      })
+                    }
                   >
                     Sebelumnya
                   </Button>
@@ -368,7 +390,12 @@ export default function AdminReviews() {
                     variant="outline"
                     size="sm"
                     disabled={!pagination.hasNext}
-                    onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+                    onClick={() =>
+                      setPagination({
+                        ...pagination,
+                        page: pagination.page + 1,
+                      })
+                    }
                   >
                     Selanjutnya
                   </Button>
@@ -385,7 +412,8 @@ export default function AdminReviews() {
           <DialogHeader>
             <DialogTitle>Hapus Review</DialogTitle>
             <DialogDescription>
-              Apakah Anda yakin ingin menghapus review ini? Tindakan ini tidak dapat dibatalkan.
+              Apakah Anda yakin ingin menghapus review ini? Tindakan ini tidak
+              dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>
           {selectedReview && (
@@ -419,7 +447,7 @@ export default function AdminReviews() {
               onClick={handleDelete}
               disabled={deleting}
             >
-              {deleting ? 'Menghapus...' : 'Hapus'}
+              {deleting ? "Menghapus..." : "Hapus"}
             </Button>
           </DialogFooter>
         </DialogContent>
